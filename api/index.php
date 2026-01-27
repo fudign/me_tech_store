@@ -38,6 +38,16 @@ try {
     putenv('SESSION_DRIVER=array');
     putenv('CACHE_STORE=array');
 
+    // Configure logging for serverless (stderr instead of files)
+    putenv('LOG_CHANNEL=stderr');
+
+    // Set APP_SERVICES_CACHE and other cache paths to /tmp
+    putenv('APP_SERVICES_CACHE=' . $tmpStorage . '/services.php');
+    putenv('APP_PACKAGES_CACHE=' . $tmpStorage . '/packages.php');
+    putenv('APP_CONFIG_CACHE=' . $tmpStorage . '/config.php');
+    putenv('APP_ROUTES_CACHE=' . $tmpStorage . '/routes.php');
+    putenv('APP_EVENTS_CACHE=' . $tmpStorage . '/events.php');
+
     // Disable Debugbar if not installed (production)
     if (getenv('VERCEL') === 'true') {
         putenv('DEBUGBAR_ENABLED=false');
