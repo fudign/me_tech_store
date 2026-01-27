@@ -1,0 +1,500 @@
+<html lang="ru" class="scroll-smooth"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xiaomi Store | Магазин электроники</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            500: '#f97316', // Xiaomi Orange-ish
+                            600: '#ea580c',
+                            900: '#171717', // Neutral Black
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Top Bar -->
+    <div class="bg-white border-b border-gray-100 text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto px-6 h-10 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1.5 hover:text-gray-900 cursor-pointer transition-colors">
+                    <iconify-icon icon="solar:phone-calling-linear" stroke-width="1.5"></iconify-icon>
+                    +996 (555) 00-00-00
+                </span>
+                <span class="hidden sm:flex items-center gap-1.5 hover:text-gray-900 cursor-pointer transition-colors">
+                    <iconify-icon icon="solar:map-point-linear" stroke-width="1.5"></iconify-icon>
+                    Бишкек, пр. Манаса 101
+                </span>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="#" class="hover:text-gray-900 transition-colors">Поддержка</a>
+                <a href="#" class="hover:text-gray-900 transition-colors">Гарантия</a>
+                <div class="w-px h-3 bg-gray-200"></div>
+                <div class="flex items-center gap-2 cursor-pointer hover:text-gray-900">
+                    <span>Русский</span>
+                    <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header / Navigation -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 h-16 md:h-20 flex items-center justify-between gap-8">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-2 group">
+                <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center text-white text-lg font-semibold group-hover:scale-105 transition-transform duration-300">
+                    mi
+                </div>
+                <span class="text-xl tracking-tight font-semibold text-gray-900">Xiaomi Store</span>
+            </a>
+
+            <!-- Search -->
+            <div class="hidden md:flex flex-1 max-w-lg relative group">
+                <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-500 transition-colors">
+                    <iconify-icon icon="solar:magnifer-linear" width="20" stroke-width="1.5"></iconify-icon>
+                </div>
+                <input type="text" placeholder="Поиск товаров (например, Xiaomi 14)..." class="w-full bg-gray-50 border border-gray-200 rounded-full py-2.5 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-brand-100 focus:border-brand-500 transition-all placeholder:text-gray-400">
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-2 md:gap-4">
+                <button class="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-full transition-all relative">
+                    <iconify-icon icon="solar:heart-linear" width="24" stroke-width="1.5"></iconify-icon>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <button class="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-full transition-all">
+                    <iconify-icon icon="solar:user-circle-linear" width="24" stroke-width="1.5"></iconify-icon>
+                </button>
+                <button class="flex items-center gap-2 pl-2 pr-4 py-1.5 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-all active:scale-95 group">
+                    <div class="relative">
+                        <iconify-icon icon="solar:cart-large-minimalistic-linear" width="20" stroke-width="1.5"></iconify-icon>
+                    </div>
+                    <span class="text-sm font-medium">$0.00</span>
+                </button>
+                <button class="md:hidden p-2 text-gray-900">
+                    <iconify-icon icon="solar:hamburger-menu-linear" width="24" stroke-width="1.5"></iconify-icon>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Search (Visible only on mobile) -->
+        <div class="md:hidden px-6 pb-4">
+            <div class="relative">
+                <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                    <iconify-icon icon="solar:magnifer-linear" width="18"></iconify-icon>
+                </div>
+                <input type="text" placeholder="Поиск..." class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-9 text-sm focus:border-brand-500 outline-none">
+            </div>
+        </div>
+
+        <!-- Categories Menu -->
+        <nav class="hidden md:block border-t border-gray-50 bg-white">
+            <ul class="max-w-7xl mx-auto px-6 flex items-center gap-8 text-sm font-medium text-gray-500 overflow-x-auto no-scrollbar">
+                <li><a href="#" class="block py-3 hover:text-brand-500 border-b-2 border-transparent hover:border-brand-500 transition-all whitespace-nowrap text-brand-500">Главная</a></li>
+                <li><a href="#" class="block py-3 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-200 transition-all whitespace-nowrap">Смартфоны</a></li>
+                <li><a href="#" class="block py-3 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-200 transition-all whitespace-nowrap">Умный Дом</a></li>
+                <li><a href="#" class="block py-3 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-200 transition-all whitespace-nowrap">Ноутбуки</a></li>
+                <li><a href="#" class="block py-3 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-200 transition-all whitespace-nowrap">ТВ и Медиа</a></li>
+                <li><a href="#" class="block py-3 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-200 transition-all whitespace-nowrap">Аудио</a></li>
+                <li><a href="#" class="block py-3 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-200 transition-all whitespace-nowrap">Аксессуары</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="max-w-7xl mx-auto px-6 py-8 md:py-12">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-gray-900 text-white rounded-3xl p-8 md:p-12 overflow-hidden relative shadow-xl">
+            <!-- Decorative Elements -->
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-500/20 blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+            
+            <div class="md:col-span-6 relative z-10 space-y-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/10 backdrop-blur text-xs font-medium text-white">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span>
+                    Новинка
+                </div>
+                <h1 class="text-4xl md:text-6xl font-semibold tracking-tight leading-tight">
+                    Xiaomi 14 Ultra <br>
+                    <span class="text-gray-400">Оптика Leica.</span>
+                </h1>
+                <p class="text-gray-300 text-base md:text-lg max-w-md font-light leading-relaxed">
+                    Легендарная оптика, процессор Snapdragon 8 Gen 3 и новый иммерсивный дисплей. Новый взгляд на фотографию.
+                </p>
+                <div class="flex flex-wrap items-center gap-4 pt-2">
+                    <button class="bg-white text-gray-900 px-6 py-3 rounded-full text-sm font-medium hover:bg-brand-50 transition-colors flex items-center gap-2">
+                        Купить
+                        <iconify-icon icon="solar:arrow-right-linear" stroke-width="2"></iconify-icon>
+                    </button>
+                    <button class="px-6 py-3 rounded-full text-sm font-medium border border-white/20 hover:bg-white/10 transition-colors text-white">
+                        Подробнее
+                    </button>
+                </div>
+            </div>
+            
+            <div class="md:col-span-6 flex justify-center relative z-10">
+                <!-- Placeholder for Hero Image -->
+                <div class="relative w-full max-w-sm md:max-w-md aspect-square flex items-center justify-center">
+                     <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/917d6f93-fb36-439a-8c48-884b67b35381_1600w.jpg" alt="Xiaomi Smartphone" class="object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500 select-none">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="max-w-7xl mx-auto px-6 pb-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="p-6 bg-white border border-gray-200 rounded-2xl flex items-start gap-4 hover:border-brand-500/50 hover:shadow-lg hover:shadow-brand-500/5 transition-all group">
+                <div class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-500 shrink-0 group-hover:scale-110 transition-transform">
+                    <iconify-icon icon="solar:verified-check-linear" width="24" stroke-width="1.5"></iconify-icon>
+                </div>
+                <div>
+                    <h3 class="font-medium text-gray-900 mb-1">Официальная гарантия</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">1 год официальной гарантии в авторизованных сервисных центрах.</p>
+                </div>
+            </div>
+            <div class="p-6 bg-white border border-gray-200 rounded-2xl flex items-start gap-4 hover:border-brand-500/50 hover:shadow-lg hover:shadow-brand-500/5 transition-all group">
+                <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 shrink-0 group-hover:scale-110 transition-transform">
+                    <iconify-icon icon="solar:box-minimalistic-linear" width="24" stroke-width="1.5"></iconify-icon>
+                </div>
+                <div>
+                    <h3 class="font-medium text-gray-900 mb-1">Быстрая доставка</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Бесплатная доставка по городу при заказе от $50. Отправка в день заказа.</p>
+                </div>
+            </div>
+            <div class="p-6 bg-white border border-gray-200 rounded-2xl flex items-start gap-4 hover:border-brand-500/50 hover:shadow-lg hover:shadow-brand-500/5 transition-all group">
+                <div class="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-500 shrink-0 group-hover:scale-110 transition-transform">
+                    <iconify-icon icon="solar:card-linear" width="24" stroke-width="1.5"></iconify-icon>
+                </div>
+                <div>
+                    <h3 class="font-medium text-gray-900 mb-1">Рассрочка и кредит</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Выгодные условия рассрочки через банки-партнеры. 0% переплаты.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Grid -->
+    <section class="max-w-7xl mx-auto px-6 pb-16">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-xl md:text-2xl font-semibold tracking-tight text-gray-900">Категории</h2>
+            <a href="#" class="text-sm font-medium text-brand-600 hover:text-brand-500 flex items-center gap-1 transition-colors">
+                Все категории
+                <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <!-- Category Item -->
+            <a href="#" class="flex flex-col items-center gap-3 p-6 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 hover:shadow-md transition-all group">
+                <div class="text-gray-400 group-hover:text-brand-500 transition-colors">
+                    <iconify-icon icon="solar:smartphone-2-linear" width="32" stroke-width="1.5"></iconify-icon>
+                </div>
+                <span class="text-sm font-medium text-gray-900">Смартфоны</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-3 p-6 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 hover:shadow-md transition-all group">
+                <div class="text-gray-400 group-hover:text-brand-500 transition-colors">
+                    <iconify-icon icon="solar:laptop-minimalistic-linear" width="32" stroke-width="1.5"></iconify-icon>
+                </div>
+                <span class="text-sm font-medium text-gray-900">Ноутбуки</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-3 p-6 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 hover:shadow-md transition-all group">
+                <div class="text-gray-400 group-hover:text-brand-500 transition-colors">
+                    <iconify-icon icon="solar:headphones-round-linear" width="32" stroke-width="1.5"></iconify-icon>
+                </div>
+                <span class="text-sm font-medium text-gray-900">Аудио</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-3 p-6 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 hover:shadow-md transition-all group">
+                <div class="text-gray-400 group-hover:text-brand-500 transition-colors">
+                    <iconify-icon icon="solar:tv-linear" width="32" stroke-width="1.5"></iconify-icon>
+                </div>
+                <span class="text-sm font-medium text-gray-900">Smart TV</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-3 p-6 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 hover:shadow-md transition-all group">
+                <div class="text-gray-400 group-hover:text-brand-500 transition-colors">
+                    <iconify-icon icon="solar:watch-round-linear" width="32" stroke-width="1.5"></iconify-icon>
+                </div>
+                <span class="text-sm font-medium text-gray-900">Часы</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-3 p-6 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 hover:shadow-md transition-all group">
+                <div class="text-gray-400 group-hover:text-brand-500 transition-colors">
+                    <iconify-icon icon="solar:home-wifi-linear" width="32" stroke-width="1.5"></iconify-icon>
+                </div>
+                <span class="text-sm font-medium text-gray-900">Умный дом</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Popular Products -->
+    <section class="max-w-7xl mx-auto px-6 pb-20">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-xl md:text-2xl font-semibold tracking-tight text-gray-900">Популярные товары</h2>
+            <div class="flex gap-2">
+                <button class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-white hover:shadow-sm text-gray-600 transition-all">
+                    <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
+                </button>
+                <button class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-white hover:shadow-sm text-gray-600 transition-all">
+                    <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Product Card 1 -->
+            <div class="group bg-white border border-gray-200 rounded-2xl p-4 hover:shadow-xl hover:shadow-gray-200/50 hover:border-gray-300 transition-all duration-300 relative flex flex-col">
+                <div class="absolute top-4 left-4 z-10">
+                    <span class="bg-gray-900 text-white text-[10px] font-semibold px-2 py-1 rounded-md uppercase tracking-wide">Хит</span>
+                </div>
+                <button class="absolute top-4 right-4 z-10 text-gray-300 hover:text-red-500 transition-colors">
+                    <iconify-icon icon="solar:heart-linear" width="20" stroke-width="2"></iconify-icon>
+                </button>
+                
+                <div class="aspect-[4/3] flex items-center justify-center mb-4 p-2 bg-gray-50 rounded-xl overflow-hidden">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4734259a-bad7-422f-981e-ce01e79184f2_1600w.jpg" alt="Phone" class="h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
+                </div>
+                
+                <div class="space-y-2 flex-1">
+                    <h3 class="font-medium text-gray-900 leading-snug group-hover:text-brand-600 transition-colors">Xiaomi Redmi Note 13 Pro+</h3>
+                    <div class="flex flex-wrap gap-1">
+                        <span class="text-[10px] text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">12GB</span>
+                        <span class="text-[10px] text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">512GB</span>
+                        <span class="text-[10px] text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">Фиолетовый</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-gray-400 line-through block">$420</span>
+                        <span class="text-lg font-semibold text-gray-900">$389</span>
+                    </div>
+                    <button class="w-9 h-9 bg-gray-900 rounded-full flex items-center justify-center text-white hover:bg-brand-500 transition-colors shadow-sm active:scale-95">
+                        <iconify-icon icon="solar:cart-plus-linear" width="18" stroke-width="2"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Product Card 2 -->
+            <div class="group bg-white border border-gray-200 rounded-2xl p-4 hover:shadow-xl hover:shadow-gray-200/50 hover:border-gray-300 transition-all duration-300 relative flex flex-col">
+                <div class="absolute top-4 left-4 z-10">
+                    <span class="bg-brand-500 text-white text-[10px] font-semibold px-2 py-1 rounded-md uppercase tracking-wide">Акция</span>
+                </div>
+                <button class="absolute top-4 right-4 z-10 text-gray-300 hover:text-red-500 transition-colors">
+                    <iconify-icon icon="solar:heart-linear" width="20" stroke-width="2"></iconify-icon>
+                </button>
+                
+                <div class="aspect-[4/3] flex items-center justify-center mb-4 p-2 bg-gray-50 rounded-xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&amp;fit=crop&amp;q=80&amp;w=600" alt="Watch" class="h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
+                </div>
+                
+                <div class="space-y-2 flex-1">
+                    <h3 class="font-medium text-gray-900 leading-snug group-hover:text-brand-600 transition-colors">Xiaomi Watch S3</h3>
+                    <div class="flex flex-wrap gap-1">
+                        <span class="text-[10px] text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">eSIM</span>
+                        <span class="text-[10px] text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">Серебро</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                    <div>
+                        <span class="text-lg font-semibold text-gray-900">$145</span>
+                    </div>
+                    <button class="w-9 h-9 bg-gray-900 rounded-full flex items-center justify-center text-white hover:bg-brand-500 transition-colors shadow-sm active:scale-95">
+                        <iconify-icon icon="solar:cart-plus-linear" width="18" stroke-width="2"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Product Card 3 -->
+            <div class="group bg-white border border-gray-200 rounded-2xl p-4 hover:shadow-xl hover:shadow-gray-200/50 hover:border-gray-300 transition-all duration-300 relative flex flex-col">
+                <button class="absolute top-4 right-4 z-10 text-gray-300 hover:text-red-500 transition-colors">
+                    <iconify-icon icon="solar:heart-linear" width="20" stroke-width="2"></iconify-icon>
+                </button>
+                
+                <div class="aspect-[4/3] flex items-center justify-center mb-4 p-2 bg-gray-50 rounded-xl overflow-hidden">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c543a9e1-f226-4ced-80b0-feb8445a75b9_1600w.jpg" alt="Tablet" class="h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
+                </div>
+                
+                <div class="space-y-2 flex-1">
+                    <h3 class="font-medium text-gray-900 leading-snug group-hover:text-brand-600 transition-colors">Xiaomi Pad 6</h3>
+                    <div class="flex flex-wrap gap-1">
+                        <span class="text-[10px] text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">8GB/256GB</span>
+                        <span class="text-[10px] text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">144Hz</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                    <div>
+                        <span class="text-lg font-semibold text-gray-900">$320</span>
+                    </div>
+                    <button class="w-9 h-9 bg-gray-900 rounded-full flex items-center justify-center text-white hover:bg-brand-500 transition-colors shadow-sm active:scale-95">
+                        <iconify-icon icon="solar:cart-plus-linear" width="18" stroke-width="2"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Product Card 4 -->
+            <div class="group bg-white border border-gray-200 rounded-2xl p-4 hover:shadow-xl hover:shadow-gray-200/50 hover:border-gray-300 transition-all duration-300 relative flex flex-col">
+                <button class="absolute top-4 right-4 z-10 text-gray-300 hover:text-red-500 transition-colors">
+                    <iconify-icon icon="solar:heart-linear" width="20" stroke-width="2"></iconify-icon>
+                </button>
+                
+                <div class="aspect-[4/3] flex items-center justify-center mb-4 p-2 bg-gray-50 rounded-xl overflow-hidden">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5bab247f-35d9-400d-a82b-fd87cfe913d2_1600w.webp" alt="Vacuum" class="h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
+                </div>
+                
+                <div class="space-y-2 flex-1">
+                    <h3 class="font-medium text-gray-900 leading-snug group-hover:text-brand-600 transition-colors">Robot Vacuum X10+</h3>
+                    <div class="flex flex-wrap gap-1">
+                        <span class="text-[10px] text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">Smart</span>
+                        <span class="text-[10px] text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">Белый</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                    <div>
+                        <span class="text-lg font-semibold text-gray-900">$599</span>
+                    </div>
+                    <button class="w-9 h-9 bg-gray-900 rounded-full flex items-center justify-center text-white hover:bg-brand-500 transition-colors shadow-sm active:scale-95">
+                        <iconify-icon icon="solar:cart-plus-linear" width="18" stroke-width="2"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Promotion Banner -->
+    <section class="max-w-7xl mx-auto px-6 pb-20">
+        <div class="bg-gray-900 rounded-3xl p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900 to-gray-800"></div>
+            <!-- Abstract shapes -->
+            <div class="absolute left-0 top-0 w-64 h-64 bg-brand-500/10 rounded-full blur-3xl"></div>
+            
+            <div class="relative z-10 max-w-lg space-y-4 text-center md:text-left">
+                <span class="text-brand-500 font-semibold tracking-wide uppercase text-xs">Ограниченное предложение</span>
+                <h2 class="text-3xl md:text-4xl font-semibold text-white tracking-tight">Комплект "Умный Дом"</h2>
+                <p class="text-gray-400">Обновите свой дом с помощью нашей подборки умных устройств. Управляйте всем прямо с телефона.</p>
+                <div class="pt-2">
+                    <button class="bg-brand-600 hover:bg-brand-500 text-white px-8 py-3 rounded-full font-medium transition-all shadow-lg shadow-brand-500/20">
+                        Смотреть коллекцию
+                    </button>
+                </div>
+            </div>
+            
+            <div class="relative z-10 flex gap-4">
+                <div class="w-24 h-32 bg-white/5 backdrop-blur border border-white/10 rounded-xl flex items-center justify-center">
+                    <iconify-icon icon="solar:lightbulb-minimalistic-linear" class="text-white text-4xl"></iconify-icon>
+                </div>
+                <div class="w-24 h-32 bg-white/5 backdrop-blur border border-white/10 rounded-xl flex items-center justify-center mt-8">
+                    <iconify-icon icon="solar:camera-square-linear" class="text-white text-4xl"></iconify-icon>
+                </div>
+                <div class="w-24 h-32 bg-white/5 backdrop-blur border border-white/10 rounded-xl flex items-center justify-center">
+                    <iconify-icon icon="solar:plug-circle-linear" class="text-white text-4xl"></iconify-icon>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="bg-white border-t border-gray-100 py-16">
+        <div class="max-w-xl mx-auto px-6 text-center space-y-6">
+            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto text-gray-900">
+                <iconify-icon icon="solar:letter-linear" width="24"></iconify-icon>
+            </div>
+            <h2 class="text-2xl font-semibold tracking-tight text-gray-900">Подпишитесь на новости</h2>
+            <p class="text-gray-500 text-sm">Получайте последние обновления о новинках и предстоящих распродажах прямо на почту.</p>
+            <form class="flex flex-col sm:flex-row gap-3">
+                <input type="email" placeholder="Ваш Email" required="" class="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 outline-none focus:border-gray-900 transition-colors text-sm">
+                <button type="submit" class="bg-gray-900 text-white px-6 py-3 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">Подписаться</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-100 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+                <div class="col-span-2 lg:col-span-2 space-y-4 pr-8">
+                    <a href="#" class="flex items-center gap-2 mb-4">
+                        <div class="w-6 h-6 bg-brand-500 rounded flex items-center justify-center text-white text-xs font-bold">mi</div>
+                        <span class="text-lg font-semibold text-gray-900 tracking-tight">Xiaomi Store</span>
+                    </a>
+                    <p class="text-sm text-gray-500 leading-relaxed">
+                        Премиальный магазин электроники Xiaomi. Мы предоставляем лучшие устройства с официальной гарантией и превосходным сервисом.
+                    </p>
+                    <div class="flex gap-4 pt-2">
+                        <a href="#" class="text-gray-400 hover:text-brand-500 transition-colors"><iconify-icon icon="logos:instagram-icon" width="20"></iconify-icon></a>
+                        <a href="#" class="text-gray-400 hover:text-brand-500 transition-colors"><iconify-icon icon="logos:facebook" width="20"></iconify-icon></a>
+                        <a href="#" class="text-gray-400 hover:text-brand-500 transition-colors"><iconify-icon icon="logos:youtube-icon" width="20"></iconify-icon></a>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <h4 class="font-medium text-gray-900 text-sm">Каталог</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-brand-500 transition-colors">Смартфоны</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition-colors">Умный дом</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition-colors">Аудио и Видео</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition-colors">Гаджеты</a></li>
+                    </ul>
+                </div>
+                
+                <div class="space-y-4">
+                    <h4 class="font-medium text-gray-900 text-sm">Клиентам</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-brand-500 transition-colors">Связаться с нами</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition-colors">Гарантия</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition-colors">Сервисные центры</a></li>
+                        <li><a href="#" class="hover:text-brand-500 transition-colors">Доставка</a></li>
+                    </ul>
+                </div>
+
+                <div class="space-y-4">
+                    <h4 class="font-medium text-gray-900 text-sm">Контакты</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li class="flex items-start gap-2">
+                            <iconify-icon icon="solar:map-point-linear" class="mt-0.5 shrink-0"></iconify-icon>
+                            Бишкек, пр. Манаса 101
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <iconify-icon icon="solar:phone-calling-linear" class="shrink-0"></iconify-icon>
+                            +996 (555) 00-00-00
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <iconify-icon icon="solar:letter-linear" class="shrink-0"></iconify-icon>
+                            sales@gadget.kg
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-400">
+                <p>© 2024 Xiaomi Store KG. Все права защищены.</p>
+                <div class="flex gap-4 grayscale opacity-50">
+                    <iconify-icon icon="logos:visa" width="30"></iconify-icon>
+                    <iconify-icon icon="logos:mastercard" width="24"></iconify-icon>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+</body></html>

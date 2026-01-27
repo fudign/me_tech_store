@@ -1,0 +1,10 @@
+  <files>
+    database/migrations/001_create_categories_table.php
+    database/migrations/002_create_products_table.php
+    database/migrations/003_create_category_product_table.php
+    database/migrations/004_create_product_attributes_table.php
+    database/migrations/005_add_admin_fields_to_users.php
+    app/Models/Category.php
+    app/Models/Product.php
+    app/Models/ProductAttribute.php
+  </files>

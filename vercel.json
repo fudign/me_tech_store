@@ -1,0 +1,46 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "api/index.php",
+            "use": "vercel-php@0.7.1"
+        },
+        {
+            "src": "public/**",
+            "use": "@vercel/static"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(css|js|images|fonts|storage)/(.+)",
+            "dest": "public/$1/$2"
+        },
+        {
+            "src": "/build/(.+)",
+            "dest": "public/build/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "api/index.php"
+        }
+    ],
+    "env": {
+        "APP_ENV": "production",
+        "APP_KEY": "base64:tbR6hmDc7rnei+ABK2qceCuUbUiYMoww344HXibTJgY=",
+        "APP_DEBUG": "true",
+        "APP_URL": "https://mitech-sable.vercel.app",
+        "APP_TIMEZONE": "Asia/Bishkek",
+        "APP_LOCALE": "ru",
+        "APP_FALLBACK_LOCALE": "ru",
+        "LOG_CHANNEL": "errorlog",
+        "LOG_LEVEL": "debug",
+        "SESSION_DRIVER": "array",
+        "CACHE_STORE": "array",
+        "QUEUE_CONNECTION": "sync",
+        "FILESYSTEM_DISK": "local",
+        "MAIL_MAILER": "log",
+        "DB_CONNECTION": "sqlite",
+        "VERCEL_DEMO_MODE": "true",
+        "VERCEL": "true"
+    }
+}

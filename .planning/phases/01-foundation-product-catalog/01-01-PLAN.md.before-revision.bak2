@@ -1,0 +1,570 @@
+---
+phase: 01-foundation-product-catalog
+plan: 01
+type: execute
+wave: 1
+depends_on: []
+files_modified:
+  - composer.json
+  - .env
+  - database/migrations/001_create_categories_table.php
+  - database/migrations/002_create_products_table.php
+  - database/migrations/003_create_category_product_table.php
+  - database/migrations/004_create_product_attributes_table.php
+  - database/migrations/005_add_admin_fields_to_users.php
+  - app/Models/Product.php
+  - app/Models/Category.php
+  - app/Models/ProductAttribute.php
+  - app/Models/User.php
+autonomous: true
+
+must_haves:
+  truths:
+    - "Laravel application runs on localhost without errors"
+    - "Database connection succeeds with MySQL 8.4"
+    - "Product and Category tables exist with proper relationships"
+    - "Admin user can be created in database"
+  artifacts:
+    - path: "composer.json"
+      provides: "Laravel 12 dependencies"
+      contains: "laravel/framework"
+    - path: "database/migrations/002_create_products_table.php"
+      provides: "Product schema with slug, price, stock"
+      min_lines: 30
+    - path: "app/Models/Product.php"
+      provides: "Product model with category relationship"
+      exports: ["categories", "attributes"]
+    - path: "app/Models/ProductAttribute.php"
+      provides: "ProductAttribute model with product relationship"
+      exports: ["product"]
+  key_links:
+    - from: "app/Models/Product.php"
+      to: "app/Models/Category.php"
+  - app/Models/ProductAttribute.php
+      via: "belongsToMany relationship"
+      pattern: "belongsToMany\\(Category::class\\)"
+    - from: "app/Models/Product.php"
+      to: "app/Models/ProductAttribute.php"
+      via: "hasMany relationship"
+      pattern: "hasMany(ProductAttribute::class)"
+    - from: "app/Models/ProductAttribute.php"
+      to: "app/Models/Product.php"
+      via: "belongsTo relationship"
+      pattern: "belongsTo(Product::class)"
+    - from: "database/migrations"
+      to: "MySQL database"
+      via: "php artisan migrate"
+      pattern: "Schema::create"
+---
+
+<objective>
+Establish secure Laravel 12 foundation with database schema for e-commerce platform.
+
+Purpose: Create production-ready foundation that prevents SQL injection, session vulnerabilities, and schema issues identified in research pitfalls. All subsequent features depend on this secure base.
+
+Output: Working Laravel 12 installation with Product/Category/ProductAttribute/User models, secure session configuration, and production-ready database schema.
+</objective>
+
+<execution_context>
+@C:\Users\user\Desktop\mi_tech\.planning\workflows\execute-plan.md
+@C:\Users\user\Desktop\mi_tech\.planning\templates\summary.md
+</execution_context>
+
+<context>
+@C:\Users\user\Desktop\mi_tech\.planning\PROJECT.md
+@C:\Users\user\Desktop\mi_tech\.planning\ROADMAP.md
+@C:\Users\user\Desktop\mi_tech\.planning\STATE.md
+@C:\Users\user\Desktop\mi_tech\.planning\research\STACK.md
+@C:\Users\user\Desktop\mi_tech\.planning\research\ARCHITECTURE.md
+@C:\Users\user\Desktop\mi_tech\.planning\research\PITFALLS.md
+
+# Existing HTML template to integrate later
+@C:\Users\user\Desktop\mi_tech\generated-page.html
+</context>
+
+<tasks>
+
+<task type="auto">
+  <name>Install Laravel 12 with core e-commerce dependencies</name>
+  <files>
+    composer.json
+    composer.lock
+    .env
+    .env.example
+    config/app.php
+    config/database.php
+    config/session.php
+  </files>
+  <action>
+    1. Create Laravel 12 project in current directory (mi_tech):
+       - Run: composer create-project laravel/laravel . "12.*"
+       - If directory not empty, use --force flag
+
+    2. Install core e-commerce packages:
+       ```bash
+       composer require darryldecode/cart
+       composer require spatie/laravel-sluggable
+       composer require spatie/laravel-permission
+       composer require spatie/laravel-activitylog
+       composer require artesaos/seotools
+       composer require --dev laravel/pint
+       composer require --dev barryvdh/laravel-debugbar
+       ```
+
+    3. Configure .env for local development:
+       - DB_CONNECTION=mysql
+       - DB_HOST=127.0.0.1
+       - DB_PORT=3306
+       - DB_DATABASE=mi_tech
+       - DB_USERNAME=root
+       - DB_PASSWORD=[leave empty or set based on local MySQL]
+       - APP_NAME="Mi Tech Store"
+       - APP_LOCALE=ru
+       - APP_FALLBACK_LOCALE=ru
+
+    4. Configure secure session settings in config/session.php:
+       - 'driver' => env('SESSION_DRIVER', 'file') // Will use Redis in production, file for local dev
+       - 'lifetime' => 120 // 2 hours
+       - 'expire_on_close' => false
+       - 'secure' => env('SESSION_SECURE_COOKIE', false) // true in production
+       - 'http_only' => true // CRITICAL: prevents XSS session theft
+       - 'same_site' => 'strict' // CRITICAL: prevents CSRF
+
+    5. Set Russian locale in config/app.php:
+       - 'locale' => 'ru'
+       - 'fallback_locale' => 'ru'
+       - 'timezone' => 'Asia/Bishkek'
+
+    Why this approach:
+    - Fresh Laravel 12 ensures PHP 8.3 compatibility and latest security patches
+    - darryldecode/cart chosen over spatie/laravel-cart for maturity (since 2015)
+    - Session settings address Pitfall #2 (weak session management) from research
+    - http_only and same_site flags are non-negotiable security requirements
+  </action>
+  <verify>
+    ```bash
+    # Verify Laravel installation
+    php artisan --version  # Should show Laravel Framework 12.x
+
+    # Verify packages installed
+    composer show darryldecode/cart
+    composer show spatie/laravel-sluggable
+
+    # Verify environment
+    php artisan env
+
+    # Check session config
+    grep -E "(http_only|same_site)" config/session.php
+    ```
+  </verify>
+  <done>
+    - Laravel 12 installed with all dependencies in composer.json
+    - .env file configured for local MySQL database
+    - Session security flags (http_only, same_site) set correctly
+    - Russian locale configured as APP_LOCALE
+    - php artisan --version returns Laravel 12.x
+  </done>
+</task>
+
+<task type="auto">
+  <name>Create secure database schema for products and categories</name>
+  <files>
+    database/migrations/001_create_categories_table.php
+    database/migrations/002_create_products_table.php
+    database/migrations/003_create_category_product_table.php
+    database/migrations/004_create_product_attributes_table.php
+  - database/migrations/005_add_admin_fields_to_users.php
+    app/Models/Category.php
+    app/Models/ProductAttribute.php
+  - app/Models/ProductAttribute.php
+    app/Models/Product.php
+  </files>
+  <action>
+    1. Create categories migration (001_create_categories_table.php):
+       ```php
+       Schema::create('categories', function (Blueprint $table) {
+           $table->id();
+           $table->string('name', 200)->index();
+           $table->string('slug', 200)->unique()->index();
+           $table->text('description')->nullable();
+           $table->string('meta_title', 200)->nullable();
+           $table->string('meta_description', 300)->nullable();
+           $table->boolean('is_active')->default(true)->index();
+           $table->timestamps();
+       });
+       ```
+
+    2. Create products migration (002_create_products_table.php):
+       ```php
+       Schema::create('products', function (Blueprint $table) {
+           $table->id();
+           $table->string('name', 200)->index();
+           $table->string('slug', 200)->unique()->index();
+           $table->text('description')->nullable();
+           $table->text('specifications')->nullable(); // JSON for specs
+           $table->integer('price')->unsigned(); // Store in cents to avoid rounding errors (Pitfall #7)
+           $table->integer('old_price')->unsigned()->nullable(); // For discounts
+           $table->integer('stock')->unsigned()->default(0)->index();
+           $table->string('sku', 100)->unique()->nullable()->index();
+           $table->string('main_image', 255)->nullable();
+           $table->json('images')->nullable(); // Array of additional images
+           $table->string('meta_title', 200)->nullable();
+           $table->string('meta_description', 300)->nullable();
+           $table->boolean('is_active')->default(true)->index();
+           $table->integer('view_count')->unsigned()->default(0); // For popular products
+           $table->timestamps();
+       });
+       ```
+
+       CRITICAL: Price stored as integer (cents) to prevent rounding errors (Pitfall #7)
+       CRITICAL: Slug indexed and unique for SEO-friendly URLs (Pitfall #8)
+       CRITICAL: Stock indexed for inventory queries (Pitfall #10)
+
+    3. Create category_product pivot table (003_create_category_product_table.php):
+       ```php
+       Schema::create('category_product', function (Blueprint $table) {
+           $table->id();
+           $table->foreignId('category_id')->constrained()->onDelete('cascade');
+           $table->foreignId('product_id')->constrained()->onDelete('cascade');
+           $table->timestamps();
+
+           // Composite index for many-to-many queries
+           $table->index(['category_id', 'product_id']);
+       });
+       ```
+
+    4. Create product_attributes migration (004_create_product_attributes_table.php):
+  - database/migrations/005_add_admin_fields_to_users.php
+       ```php
+       Schema::create('product_attributes', function (Blueprint $table) {
+           $table->id();
+           $table->foreignId('product_id')->constrained()->onDelete('cascade');
+           $table->string('key', 100)->index(); // e.g., 'memory', 'color'
+           $table->string('value', 255); // e.g., '128GB', 'Black'
+           $table->timestamps();
+
+           $table->index(['product_id', 'key']);
+       });
+       ```
+
+       Why separate table: Enables filtering by attributes without JSON queries (Pitfall #6)
+
+    5. Create Category model with Sluggable:
+       ```php
+       use Spatie\Sluggable\HasSlug;
+       use Spatie\Sluggable\SlugOptions;
+
+       class Category extends Model {
+           use HasSlug;
+
+           protected $fillable = ['name', 'description', 'is_active', 'meta_title', 'meta_description'];
+
+           public function getSlugOptions(): SlugOptions {
+               return SlugOptions::create()
+                   ->generateSlugsFrom('name')
+                   ->saveSlugsTo('slug');
+           }
+
+           public function products() {
+               return $this->belongsToMany(Product::class);
+           }
+       }
+       ```
+
+    6. Create Product model with Sluggable:
+       ```php
+       use Spatie\Sluggable\HasSlug;
+       use Spatie\Sluggable\SlugOptions;
+
+       class Product extends Model {
+           use HasSlug;
+
+           protected $fillable = [
+               'name', 'description', 'specifications', 'price', 'old_price',
+               'stock', 'sku', 'main_image', 'images', 'is_active',
+               'meta_title', 'meta_description'
+           ];
+
+           protected $casts = [
+               'specifications' => 'array',
+               'images' => 'array',
+               'price' => 'integer',
+               'old_price' => 'integer',
+               'is_active' => 'boolean'
+           ];
+
+           public function getSlugOptions(): SlugOptions {
+               return SlugOptions::create()
+                   ->generateSlugsFrom('name')
+                   ->saveSlugsTo('slug');
+           }
+
+           public function categories() {
+               return $this->belongsToMany(Category::class);
+           }
+
+           public function attributes() {
+               return $this->hasMany(ProductAttribute::class);
+           }
+
+           // Helper for displaying price in KGS
+           public function getFormattedPriceAttribute() {
+               return number_format($this->price / 100, 2) . ' сом';
+           }
+       }
+       ```
+
+       Why this approach:
+       - Integer price storage prevents rounding errors (addresses Pitfall #7)
+       - Spatie Sluggable ensures unique, SEO-friendly URLs (addresses Pitfall #8)
+       - Indexed columns on name, slug, sku, stock enable fast queries (addresses Pitfall #6)
+       - Many-to-many relationship allows product in multiple categories
+       - Separate attributes table enables efficient filtering (addresses Pitfall #6)
+       - ProductAttribute model with belongsTo completes the relationship chain
+n    7. Create ProductAttribute model with Product relationship:
+       ```php
+       namespace AppModels;
+
+       use IlluminateDatabaseEloquentModel;
+       use IlluminateDatabaseEloquentRelationsBelongsTo;
+
+       class ProductAttribute extends Model {
+           protected $fillable = ['product_id', 'key', 'value'];
+
+           public function product(): BelongsTo {
+               return $this->belongsTo(Product::class);
+           }
+       }
+       ```
+
+       CRITICAL: This model is required for Plan 01-03 to filter products by attributes.
+       The belongsTo relationship completes the bidirectional link with Product::attributes().
+  </action>
+  </action>
+  <verify>
+    ```bash
+    # Create database
+    mysql -u root -e "CREATE DATABASE IF NOT EXISTS mi_tech CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+    # Run migrations
+    php artisan migrate
+
+    # Verify tables exist
+    php artisan db:show
+
+    # Verify indexes
+    mysql -u root mi_tech -e "SHOW INDEX FROM products;"
+    mysql -u root mi_tech -e "SHOW INDEX FROM categories;"
+
+    # Test model relationships in tinker
+    php artisan tinker --execute="Category::factory()->create(); Product::factory()->create();"
+    ```
+  </verify>
+  <done>
+    - All 4 migration files created with proper schema
+    - Price stored as integer (cents) to prevent rounding errors
+    - Slug columns indexed and unique for SEO performance
+    - Product and Category models have working belongsToMany relationships
+    - ProductAttribute model created with belongsTo(Product::class) relationship
+    - Product->attributes() hasMany relationship works bidirectionally with ProductAttribute->product()
+    - Migrations run successfully creating all tables
+    - Database schema matches architecture research recommendations
+  </done>
+</task>
+
+<task type="auto">
+  <name>Configure admin authentication and create seed admin user</name>
+  <files>
+    database/migrations/005_add_admin_fields_to_users.php
+    database/seeders/AdminUserSeeder.php
+    app/Models/User.php
+  </files>
+  <action>
+    1. Modify users migration to add admin fields (005_add_admin_fields_to_users.php):
+       ```php
+       Schema::table('users', function (Blueprint $table) {
+           $table->boolean('is_admin')->default(false)->after('password');
+           $table->timestamp('last_login_at')->nullable()->after('remember_token');
+       });
+       ```
+
+    2. Update User model with admin check:
+       ```php
+       class User extends Authenticatable {
+           protected $fillable = ['name', 'email', 'password', 'is_admin'];
+
+           protected $hidden = ['password', 'remember_token'];
+
+           protected $casts = [
+               'email_verified_at' => 'datetime',
+               'last_login_at' => 'datetime',
+               'is_admin' => 'boolean',
+               'password' => 'hashed', // Laravel 12 automatic hashing
+           ];
+
+           public function isAdmin(): bool {
+               return $this->is_admin === true;
+           }
+       }
+       ```
+
+    3. Create AdminUserSeeder (database/seeders/AdminUserSeeder.php):
+       ```php
+       use Illuminate\Support\Facades\Hash;
+
+       public function run() {
+           User::create([
+               'name' => 'Admin',
+               'email' => 'admin@mitech.kg',
+               'password' => Hash::make('admin123'), // Change in production
+               'is_admin' => true,
+               'email_verified_at' => now(),
+           ]);
+       }
+       ```
+
+    4. Register seeder in DatabaseSeeder:
+       ```php
+       public function run() {
+           $this->call([AdminUserSeeder::class]);
+       }
+       ```
+
+    5. Run migrations and seed:
+       ```bash
+       php artisan migrate
+       php artisan db:seed --class=AdminUserSeeder
+       ```
+
+    Why this approach:
+    - Simple is_admin flag sufficient for single admin (no complex roles needed in Phase 1)
+    - Password automatically hashed via User model cast (Laravel 12 feature)
+    - Seeder creates initial admin for testing (credentials documented in .env.example)
+    - last_login_at field for security audit trail
+  </action>
+  <verify>
+    ```bash
+    # Run migration and seeder
+    php artisan migrate
+    php artisan db:seed --class=AdminUserSeeder
+
+    # Verify admin user exists
+    php artisan tinker --execute="User::where('email', 'admin@mitech.kg')->first();"
+
+    # Test authentication
+    php artisan tinker --execute="Auth::attempt(['email' => 'admin@mitech.kg', 'password' => 'admin123']);"
+    ```
+  </verify>
+  <done>
+    - User model has is_admin boolean field
+    - Admin user seeded with email: admin@mitech.kg, password: admin123
+    - User::isAdmin() method available for authorization checks
+    - Password automatically hashed using Laravel 12 password casting
+    - Admin user can be authenticated via Auth::attempt()
+  </done>
+</task>
+
+</tasks>
+
+<verification>
+Run full verification suite:
+
+```bash
+# 1. Verify Laravel installation
+php artisan --version
+php artisan about
+
+# 2. Verify database connection
+php artisan db:show
+
+# 3. Verify all migrations ran
+php artisan migrate:status
+
+# 4. Verify models and relationships work
+php artisan tinker --execute="
+\$cat = Category::create(['name' => 'Smartphones']);
+\$prod = Product::create(['name' => 'Xiaomi 14 Pro', 'price' => 4999900, 'stock' => 10]);
+\$prod->categories()->attach(\$cat->id);
+echo \$prod->categories->first()->name;
+"
+
+# 5. Verify ProductAttribute model and relationship
+php artisan tinker --execute="
+$prod = Product::first();
+$attr = $prod->attributes()->create(['key' => 'memory', 'value' => '256GB']);
+echo 'Attribute product: ' . $attr->product->name;
+echo 'Product attributes count: ' . $prod->attributes->count();
+"
+
+
+# 6. Verify admin authentication
+php artisan tinker --execute="
+\$admin = User::where('email', 'admin@mitech.kg')->first();
+echo \$admin->isAdmin() ? 'Admin OK' : 'Admin FAIL';
+"
+
+# 7. Verify session security settings
+grep -E "(http_only|same_site)" config/session.php
+
+# 8. Test slug generation
+php artisan tinker --execute="
+\$prod = new Product(['name' => 'Xiaomi Redmi Note 13']);
+\$prod->save();
+echo \$prod->slug;
+"
+```
+
+Expected results:
+- Laravel 12.x version displayed
+- Database connection successful
+- All migrations show "Ran"
+- Product-Category relationship works
+- ProductAttribute model exists and relationships work bidirectionally
+- Admin authentication succeeds
+- Session config shows http_only: true, same_site: 'strict'
+- Slug auto-generates: xiaomi-redmi-note-13
+</verification>
+
+<success_criteria>
+Foundation phase complete when:
+
+1. **Laravel Installation**:
+   - Laravel 12.x running without errors
+   - All e-commerce packages installed (darryldecode/cart, spatie packages)
+   - Russian locale configured (ru)
+
+2. **Database Schema**:
+   - Products table with integer price (cents), indexed slug, stock tracking
+   - Categories table with slugs and SEO fields
+   - Many-to-many category_product relationship
+   - Product attributes table for filterable specs
+   - All indexes created (slug, sku, stock, is_active)
+
+3. **Security**:
+   - Session http_only and same_site flags set (addresses Pitfall #2)
+   - Integer price storage to prevent rounding errors (addresses Pitfall #7)
+   - Proper indexes to prevent slow queries (addresses Pitfall #6)
+   - Admin authentication working with password hashing
+
+4. **Models**:
+   - Product model with auto-slug generation, category relationship, attributes relationship
+   - ProductAttribute model with product relationship (bidirectional with Product)
+   - User model with isAdmin() method
+   - All relationships bidirectional and working
+
+5. **Verification**:
+   - All migration tests pass
+   - Can create Product, attach to Category, retrieve via relationship
+   - Can create ProductAttribute, access via Product->attributes() and ProductAttribute->product()
+   - Admin user authenticates successfully
+   - Slug generation works automatically
+</success_criteria>
+
+<output>
+After completion, create `.planning/phases/01-foundation-product-catalog/01-01-SUMMARY.md` documenting:
+- Laravel version and packages installed
+- Database schema structure (tables, indexes, relationships)
+- Security configurations applied
+- Any deviations from plan
+- Key file paths for Plan 02 reference
+</output>
