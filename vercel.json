@@ -26,7 +26,7 @@
     ],
     "env": {
         "APP_ENV": "production",
-        "APP_KEY": "base64:tbR6hmDc7rnei+ABK2qceCuUbUiYMoww344HXibTJgY=",
+        "APP_KEY": "@app_key",
         "APP_DEBUG": "false",
         "APP_URL": "https://metechstore-main.vercel.app",
         "APP_TIMEZONE": "Asia/Bishkek",
@@ -39,8 +39,12 @@
         "QUEUE_CONNECTION": "sync",
         "FILESYSTEM_DISK": "local",
         "MAIL_MAILER": "log",
-        "DB_CONNECTION": "sqlite",
-        "VERCEL_DEMO_MODE": "true",
+        "DB_CONNECTION": "pgsql",
+        "DB_HOST": "@db_host",
+        "DB_PORT": "5432",
+        "DB_DATABASE": "@db_database",
+        "DB_USERNAME": "@db_username",
+        "DB_PASSWORD": "@db_password",
         "VERCEL": "true"
     }
 }
