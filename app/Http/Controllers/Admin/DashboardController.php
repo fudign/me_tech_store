@@ -23,7 +23,7 @@ class DashboardController extends Controller
         // Main statistics
         $stats = [
             'total_revenue' => Order::whereIn('status', [Order::STATUS_COMPLETED, Order::STATUS_DELIVERING])
-                ->sum('total'),
+                ->sum('total_amount'),
             'total_orders' => Order::count(),
             'total_customers' => User::whereNotNull('email_verified_at')->count(),
             'total_products' => Product::where('is_active', true)->count(),
@@ -31,7 +31,7 @@ class DashboardController extends Controller
             // Monthly stats
             'monthly_revenue' => Order::whereIn('status', [Order::STATUS_COMPLETED, Order::STATUS_DELIVERING])
                 ->where('created_at', '>=', $thisMonth)
-                ->sum('total'),
+                ->sum('total_amount'),
             'monthly_orders' => Order::where('created_at', '>=', $thisMonth)->count(),
 
             // New orders count

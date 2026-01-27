@@ -69,7 +69,7 @@ class CustomerController extends Controller
             'total_orders' => $customer->orders()->count(),
             'total_spent' => $customer->orders()
                 ->whereIn('status', [Order::STATUS_COMPLETED, Order::STATUS_DELIVERING])
-                ->sum('total'),
+                ->sum('total_amount'),
             'average_order' => 0,
             'completed_orders' => $customer->orders()
                 ->where('status', Order::STATUS_COMPLETED)

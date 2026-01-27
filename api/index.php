@@ -35,7 +35,7 @@ try {
     }
 
     putenv('VIEW_COMPILED_PATH=' . $tmpStorage . '/views');
-    putenv('SESSION_DRIVER=array');
+    putenv('SESSION_DRIVER=cookie');
     putenv('CACHE_STORE=array');
 
     // Configure logging for serverless (stderr instead of files)
@@ -59,9 +59,12 @@ try {
     // Forward Vercel requests to public/index.php
     require __DIR__ . '/../public/index.php';
 } catch (\Throwable $e) {
-    http_response_code(500);
-    echo "Error: " . $e->getMessage() . "\n";
-    echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n";
-    echo "Trace: " . $e->getTraceAsString();
+    // Don't try to set response code if headers already sent
+    if (!headers_sent()) {
+        http_response_code(500);
+    }
+    error_log("Error: " . $e->getMessage());
+    error_log("File: " . $e->getFile() . ":" . $e->getLine());
+    echo "Internal Server Error";
     exit(1);
 }
