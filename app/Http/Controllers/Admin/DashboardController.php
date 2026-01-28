@@ -71,7 +71,7 @@ class DashboardController extends Controller
         }
 
         // Top 5 selling products
-        $topProducts = OrderItem::select('product_id', DB::raw('sum(quantity) as total_sold'), DB::raw('sum(price * quantity) as total_revenue'))
+        $topProducts = OrderItem::select('product_id', DB::raw('sum(quantity) as total_sold'), DB::raw('sum(subtotal) as total_revenue'))
             ->with('product')
             ->groupBy('product_id')
             ->orderByDesc('total_sold')
