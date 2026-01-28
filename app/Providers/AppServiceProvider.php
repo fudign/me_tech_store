@@ -38,12 +38,6 @@ class AppServiceProvider extends ServiceProvider
         // Share categories with storefront views for navigation menu
         // Exclude admin views to avoid conflicts with pagination
         View::composer(['layouts.app', 'storefront.*'], function ($view) {
-            // Skip if this is a static asset request (no views are rendered)
-            $request = request();
-            if ($request && $this->isStaticAssetRequest($request)) {
-                return;
-            }
-
             try {
                 $categories = Category::where('is_active', true)
                     ->withCount(['products' => function ($query) {
@@ -90,35 +84,5 @@ class AppServiceProvider extends ServiceProvider
                 Limit::perMinutes(2, 1)->by($request->input('phone')),
             ];
         });
-    }
-
-    /**
-     * Check if the request is for a static asset
-     */
-    private function isStaticAssetRequest($request): bool
-    {
-        $path = $request->path();
-
-        // List of static asset patterns
-        $staticPatterns = [
-            'favicon.ico',
-            'robots.txt',
-            'sitemap.xml',
-        ];
-
-        // Check exact matches
-        if (in_array($path, $staticPatterns)) {
-            return true;
-        }
-
-        // Check if path starts with static directories
-        $staticDirs = ['css/', 'js/', 'images/', 'fonts/', 'storage/', 'build/'];
-        foreach ($staticDirs as $dir) {
-            if (str_starts_with($path, $dir)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
