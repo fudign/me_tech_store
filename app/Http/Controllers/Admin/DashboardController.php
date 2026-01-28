@@ -86,9 +86,9 @@ class DashboardController extends Controller
 
         // Low stock products (less than 10)
         $lowStockProducts = Product::where('is_active', true)
-            ->where('stock_quantity', '<', 10)
-            ->where('stock_quantity', '>', 0)
-            ->orderBy('stock_quantity')
+            ->where('stock', '<', 10)
+            ->where('stock', '>', 0)
+            ->orderBy('stock')
             ->limit(5)
             ->get();
 
