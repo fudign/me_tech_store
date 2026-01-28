@@ -92,3 +92,26 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::post('settings', [SettingsController::class, 'update'])->name('settings.update');
 });
+
+// Temporary route to clear PostgreSQL cached plans - REMOVE AFTER USE
+Route::get('/clear-db-cache-temp-2026', function () {
+    try {
+        // Clear prepared statements and temporary tables
+        DB::connection()->getPdo()->exec('DISCARD ALL');
+
+        // Reconnect to force new connection
+        DB::purge('pgsql');
+        DB::reconnect('pgsql');
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Database cache cleared successfully',
+            'timestamp' => now()->toDateTimeString()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
