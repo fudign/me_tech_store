@@ -93,6 +93,28 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::post('settings', [SettingsController::class, 'update'])->name('settings.update');
 });
 
+// TEST DATABASE CONNECTION - REMOVE AFTER TESTING
+Route::get('/test-db-connection', function () {
+    try {
+        $products = \App\Models\Product::count();
+        $categories = \App\Models\Category::count();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Database connection is working!',
+            'products' => $products,
+            'categories' => $categories,
+            'timestamp' => now()->toDateTimeString()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
+});
+
 // Temporary route to clear PostgreSQL cached plans - REMOVE AFTER USE
 Route::get('/clear-db-cache-temp-2026', function () {
     try {

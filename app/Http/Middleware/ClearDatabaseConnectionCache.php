@@ -16,16 +16,19 @@ class ClearDatabaseConnectionCache
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Only in production with PostgreSQL pooler
-        if (config('app.env') === 'production' && config('database.default') === 'pgsql') {
+        // For PostgreSQL connections (especially with pooler)
+        if (config('database.default') === 'pgsql') {
             try {
-                // Reconnect to get fresh connection from pool
-                DB::reconnect();
-
-                // Clear any cached prepared statements
+                // Clear any cached prepared statements at request start
                 DB::statement('DEALLOCATE ALL');
             } catch (\Exception $e) {
-                // Ignore errors - connection might not support this
+                // Ignore errors - DEALLOCATE might not be supported in session mode
+                try {
+                    // Alternative: reconnect to get fresh connection
+                    DB::reconnect();
+                } catch (\Exception $e2) {
+                    // Still ignore - we'll handle errors at query level
+                }
             }
         }
 

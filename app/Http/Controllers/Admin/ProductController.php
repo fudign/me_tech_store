@@ -29,7 +29,22 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('is_active', true)->get();
+        try {
+            $categories = Category::where('is_active', true)->get();
+        } catch (\Exception $e) {
+            // If cached plan error, try to reconnect and retry
+            if (str_contains($e->getMessage(), 'cached plan')) {
+                \Illuminate\Support\Facades\DB::reconnect();
+                try {
+                    \Illuminate\Support\Facades\DB::statement('DEALLOCATE ALL');
+                } catch (\Exception $e2) {
+                    // Ignore
+                }
+                $categories = Category::where('is_active', true)->get();
+            } else {
+                throw $e;
+            }
+        }
 
         return view('admin.products.create', compact('categories'));
     }
@@ -110,7 +125,23 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $product->load('categories', 'attributes');
-        $categories = Category::where('is_active', true)->get();
+
+        try {
+            $categories = Category::where('is_active', true)->get();
+        } catch (\Exception $e) {
+            // If cached plan error, try to reconnect and retry
+            if (str_contains($e->getMessage(), 'cached plan')) {
+                \Illuminate\Support\Facades\DB::reconnect();
+                try {
+                    \Illuminate\Support\Facades\DB::statement('DEALLOCATE ALL');
+                } catch (\Exception $e2) {
+                    // Ignore
+                }
+                $categories = Category::where('is_active', true)->get();
+            } else {
+                throw $e;
+            }
+        }
 
         return view('admin.products.edit', compact('product', 'categories'));
     }

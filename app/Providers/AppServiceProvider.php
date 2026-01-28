@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Services\SupabaseService;
+use App\Database\Connectors\NeonPostgresConnector;
+use Illuminate\Database\Connectors\ConnectionFactory;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,11 @@ class AppServiceProvider extends ServiceProvider
         // Register Supabase Service
         $this->app->singleton(SupabaseService::class, function ($app) {
             return new SupabaseService();
+        });
+
+        // Register custom Neon PostgreSQL connector
+        $this->app->singleton('db.connector.pgsql', function () {
+            return new NeonPostgresConnector();
         });
     }
 
