@@ -11,7 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Add database connection cache clearing for production
+        $middleware->append(\App\Http\Middleware\ClearDatabaseConnectionCache::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Handle database connection errors (ERR-02)
@@ -60,6 +61,27 @@ return Application::configure(basePath: dirname(__DIR__))
                     '<html><body><h1>Сервис временно недоступен</h1><p>Попробуйте позже.</p></body></html>',
                     503
                 )->header('Content-Type', 'text/html');
+            }
+
+            // Handle cached plan errors from connection pooler
+            if (str_contains($e->getMessage(), 'cached plan must not change result type')) {
+                \Illuminate\Support\Facades\Log::warning('Cached plan error detected - reconnecting', [
+                    'error' => $e->getMessage(),
+                    'url' => $request->fullUrl(),
+                ]);
+
+                // Reconnect and retry once
+                try {
+                    \Illuminate\Support\Facades\DB::reconnect();
+                    \Illuminate\Support\Facades\DB::statement('DEALLOCATE ALL');
+                } catch (\Exception $reconnectError) {
+                    // If reconnect fails, show error page
+                }
+
+                // Redirect to same page to retry with fresh connection
+                if (!$request->expectsJson()) {
+                    return redirect($request->fullUrl());
+                }
             }
         });
     })->create();

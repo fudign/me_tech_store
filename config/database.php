@@ -96,10 +96,12 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'prefer'),
-            'options' => env('DB_ENDPOINT') ? [
-                PDO::ATTR_EMULATE_PREPARES => true,
-                PDO::PGSQL_ATTR_DISABLE_PREPARES => false,
-            ] : [],
+            'endpoint' => env('DB_ENDPOINT'),
+            'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true,
+                \PDO::ATTR_PERSISTENT => false,
+            ],
+            'pool_mode' => 'transaction', // pgbouncer compatibility
         ],
 
         'sqlsrv' => [
