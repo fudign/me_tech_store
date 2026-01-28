@@ -52,7 +52,7 @@ class DashboardController extends Controller
 
         // Last 7 days orders chart data
         $last7DaysOrders = Order::where('created_at', '>=', $last7Days)
-            ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'), DB::raw('sum(total) as revenue'))
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'), DB::raw('sum(total_amount) as revenue'))
             ->groupBy('date')
             ->orderBy('date')
             ->get();
