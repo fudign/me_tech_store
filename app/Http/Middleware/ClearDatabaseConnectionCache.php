@@ -22,7 +22,9 @@ class ClearDatabaseConnectionCache
         }
 
         // For PostgreSQL connections (especially with pooler)
-        if (config('database.default') === 'pgsql') {
+        // Disabled: DISCARD ALL causes connection issues with Neon pooler
+        // The NeonPostgresConnector handles this internally on connection creation
+        /* if (config('database.default') === 'pgsql') {
             try {
                 // Force reconnect to get fresh connection from pool
                 DB::purge('pgsql');
@@ -36,7 +38,7 @@ class ClearDatabaseConnectionCache
                     'error' => $e->getMessage()
                 ]);
             }
-        }
+        } */
 
         return $next($request);
     }
