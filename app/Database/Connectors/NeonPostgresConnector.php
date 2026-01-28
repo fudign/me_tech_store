@@ -39,6 +39,9 @@ class NeonPostgresConnector extends PostgresConnector
         $options[PDO::ATTR_EMULATE_PREPARES] = true;
         $options[PDO::ATTR_PERSISTENT] = false;
 
+        // Force statement class to prevent caching
+        $options[PDO::ATTR_STATEMENT_CLASS] = [\PDOStatement::class];
+
         return $options;
     }
 
@@ -54,14 +57,22 @@ class NeonPostgresConnector extends PostgresConnector
     {
         $connection = parent::createConnection($dsn, $config, $options);
 
-        // Disable server-side prepared statements for pgbouncer/pooler compatibility
+        // Aggressively disable server-side prepared statements
         $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+        $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Execute DEALLOCATE ALL to clear any cached plans (for transaction pooling mode)
+        // Clear any existing prepared statements and temp data
         try {
-            $connection->exec('DEALLOCATE ALL');
+            // DISCARD ALL is more aggressive than DEALLOCATE ALL
+            // It clears prepared statements, temp tables, session settings, etc.
+            $connection->exec('DISCARD ALL');
         } catch (\PDOException $e) {
-            // Ignore errors - DEALLOCATE ALL might not be allowed in session mode
+            // If DISCARD ALL fails, try DEALLOCATE ALL
+            try {
+                $connection->exec('DEALLOCATE ALL');
+            } catch (\PDOException $e2) {
+                // Ignore errors - might not be supported in transaction pooling mode
+            }
         }
 
         return $connection;

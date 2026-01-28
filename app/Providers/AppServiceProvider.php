@@ -45,6 +45,28 @@ class AppServiceProvider extends ServiceProvider
                     }])
                     ->orderBy('name')
                     ->get();
+            } catch (\Illuminate\Database\QueryException $e) {
+                // Handle cached plan errors specifically
+                if (str_contains($e->getMessage(), 'cached plan')) {
+                    try {
+                        \Illuminate\Support\Facades\DB::reconnect();
+                        \Illuminate\Support\Facades\DB::statement('DEALLOCATE ALL');
+
+                        // Retry query after reconnection
+                        $categories = Category::where('is_active', true)
+                            ->withCount(['products' => function ($query) {
+                                $query->where('is_active', true);
+                            }])
+                            ->orderBy('name')
+                            ->get();
+                    } catch (\Exception $retryException) {
+                        // If retry fails, use empty collection
+                        $categories = collect([]);
+                    }
+                } else {
+                    // For other database errors, use empty collection
+                    $categories = collect([]);
+                }
             } catch (\Exception $e) {
                 // If database is not available (e.g., Vercel demo mode), use empty collection
                 $categories = collect([]);
