@@ -17,9 +17,25 @@ class NeonPostgresConnector extends PostgresConnector
     {
         $dsn = parent::getDsn($config);
 
+        $options = [];
+
         // Add Neon endpoint option if specified
         if (isset($config['endpoint'])) {
-            $dsn .= ";options='endpoint=".$config['endpoint']."'";
+            $options[] = "endpoint=" . $config['endpoint'];
+        }
+
+        // Fix for Neon pooler: add project option when using -pooler hostname
+        // This resolves: "Inconsistent project name inferred from SNI and project option"
+        if (isset($config['host']) && str_contains($config['host'], '-pooler')) {
+            // Extract project name from hostname (format: ep-divine-dawn-ahbd0wsd-pooler.c-3.us-east-1.aws.neon.tech)
+            $projectName = explode('.', $config['host'])[0];
+            $projectName = str_replace('-pooler', '', $projectName);
+            $options[] = "project=" . $projectName;
+        }
+
+        // Append options to DSN if any exist
+        if (!empty($options)) {
+            $dsn .= ";options='" . implode(' ', $options) . "'";
         }
 
         return $dsn;
