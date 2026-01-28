@@ -16,6 +16,11 @@ class ClearDatabaseConnectionCache
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Skip middleware for static assets and favicon
+        if ($this->isStaticAsset($request)) {
+            return $next($request);
+        }
+
         // For PostgreSQL connections (especially with pooler)
         if (config('database.default') === 'pgsql') {
             try {
@@ -34,5 +39,35 @@ class ClearDatabaseConnectionCache
         }
 
         return $next($request);
+    }
+
+    /**
+     * Check if the request is for a static asset
+     */
+    private function isStaticAsset(Request $request): bool
+    {
+        $path = $request->path();
+
+        // List of static asset patterns
+        $staticPatterns = [
+            'favicon.ico',
+            'robots.txt',
+            'sitemap.xml',
+        ];
+
+        // Check exact matches
+        if (in_array($path, $staticPatterns)) {
+            return true;
+        }
+
+        // Check if path starts with static directories
+        $staticDirs = ['css/', 'js/', 'images/', 'fonts/', 'storage/', 'build/'];
+        foreach ($staticDirs as $dir) {
+            if (str_starts_with($path, $dir)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

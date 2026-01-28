@@ -78,8 +78,17 @@ return Application::configure(basePath: dirname(__DIR__))
                     // If reconnect fails, show error page
                 }
 
+                // Don't redirect for static assets or API requests
+                $path = $request->path();
+                $isStatic = str_contains($path, 'favicon.ico') ||
+                            str_contains($path, 'robots.txt') ||
+                            str_starts_with($path, 'css/') ||
+                            str_starts_with($path, 'js/') ||
+                            str_starts_with($path, 'images/') ||
+                            str_starts_with($path, 'build/');
+
                 // Redirect to same page to retry with fresh connection
-                if (!$request->expectsJson()) {
+                if (!$request->expectsJson() && !$isStatic) {
                     return redirect($request->fullUrl());
                 }
             }
