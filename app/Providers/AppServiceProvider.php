@@ -46,6 +46,12 @@ class AppServiceProvider extends ServiceProvider
                     ->orderBy('name')
                     ->get();
             } catch (\Illuminate\Database\QueryException $e) {
+                // Log the error for debugging
+                \Illuminate\Support\Facades\Log::error('Category loading failed in View Composer', [
+                    'error' => $e->getMessage(),
+                    'code' => $e->getCode(),
+                ]);
+
                 // Handle cached plan errors specifically
                 if (str_contains($e->getMessage(), 'cached plan')) {
                     try {
@@ -62,6 +68,9 @@ class AppServiceProvider extends ServiceProvider
                     } catch (\Exception $retryException) {
                         // If retry fails, use empty collection
                         $categories = collect([]);
+                        \Illuminate\Support\Facades\Log::error('Category retry failed', [
+                            'error' => $retryException->getMessage(),
+                        ]);
                     }
                 } else {
                     // For other database errors, use empty collection
@@ -69,6 +78,9 @@ class AppServiceProvider extends ServiceProvider
                 }
             } catch (\Exception $e) {
                 // If database is not available (e.g., Vercel demo mode), use empty collection
+                \Illuminate\Support\Facades\Log::error('Unexpected error loading categories', [
+                    'error' => $e->getMessage(),
+                ]);
                 $categories = collect([]);
             }
 
