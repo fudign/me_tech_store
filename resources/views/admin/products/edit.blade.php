@@ -196,7 +196,12 @@
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     @foreach($product->images as $index => $image)
                                         <div class="relative group">
-                                            <img src="{{ asset('storage/' . $image) }}"
+                                            @php
+                                                $imageSrc = filter_var($image, FILTER_VALIDATE_URL)
+                                                    ? $image
+                                                    : asset('storage/' . $image);
+                                            @endphp
+                                            <img src="{{ $imageSrc }}"
                                                  alt="Product image {{ $index + 1 }}"
                                                  class="w-full h-32 object-cover rounded-lg">
                                             <div class="absolute top-2 left-2">

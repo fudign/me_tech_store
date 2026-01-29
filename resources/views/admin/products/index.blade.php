@@ -53,7 +53,12 @@
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($product->main_image)
-                                <img src="{{ asset('storage/' . $product->main_image) }}"
+                                @php
+                                    $imageSrc = filter_var($product->main_image, FILTER_VALIDATE_URL)
+                                        ? $product->main_image
+                                        : asset('storage/' . $product->main_image);
+                                @endphp
+                                <img src="{{ $imageSrc }}"
                                      alt="{{ $product->name }}"
                                      class="w-12 h-12 object-cover rounded">
                             @else
@@ -122,7 +127,12 @@
             <div class="bg-white rounded-lg shadow-sm p-4">
                 <div class="flex gap-4">
                     @if($product->main_image)
-                        <img src="{{ asset('storage/' . $product->main_image) }}"
+                        @php
+                            $imageSrc = filter_var($product->main_image, FILTER_VALIDATE_URL)
+                                ? $product->main_image
+                                : asset('storage/' . $product->main_image);
+                        @endphp
+                        <img src="{{ $imageSrc }}"
                              alt="{{ $product->name }}"
                              class="w-20 h-20 object-cover rounded">
                     @else
