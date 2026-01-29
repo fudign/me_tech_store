@@ -333,7 +333,7 @@
             loading: false,
             searched: false,
             async search() {
-                if (this.query.length < 2) {
+                if (this.query.length < 1) {
                     this.results = [];
                     this.searched = false;
                     return;

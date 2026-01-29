@@ -43,7 +43,7 @@ class SearchController extends Controller
     public function autocomplete(Request $request)
     {
         $request->validate([
-            'q' => 'required|string|min:2|max:100',
+            'q' => 'required|string|min:1|max:100',
         ]);
 
         $query = $request->input('q');
