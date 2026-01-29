@@ -109,15 +109,13 @@
                 $contactInfo = \App\Models\Setting::get('product.contact_info', '');
             @endphp
             @if($contactInfo)
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <h3 class="font-semibold text-gray-900 mb-3">Уточняйте наличие по телефонам:</h3>
-                    <div class="space-y-1 text-sm text-gray-700">
-                        @foreach(explode("\n", $contactInfo) as $line)
-                            @if(trim($line))
-                                <div>{{ trim($line) }}</div>
-                            @endif
-                        @endforeach
-                    </div>
+                <div class="mt-6 text-sm leading-relaxed text-gray-700">
+                    <div class="font-semibold text-gray-900 mb-2">Уточняйте наличие по телефонам:</div>
+                    @foreach(explode("\n", $contactInfo) as $line)
+                        @if(trim($line))
+                            <div class="mb-1">{{ trim($line) }}</div>
+                        @endif
+                    @endforeach
                 </div>
             @endif
 
