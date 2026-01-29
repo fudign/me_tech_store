@@ -20,12 +20,21 @@ class ImageService
     /**
      * Get optimized image paths (WebP and JPEG) for a given size
      *
-     * @param string $originalPath Path relative to storage/public (e.g., "images/products/abc.jpg")
+     * @param string $originalPath Path relative to storage/public (e.g., "images/products/abc.jpg") or external URL
      * @param string $size One of 'thumb', 'medium', 'large'
-     * @return array ['webp' => path, 'jpeg' => path] relative to storage/public
+     * @return array ['webp' => path, 'jpeg' => path] relative to storage/public or external URLs
      */
     public function getOptimizedImage(string $originalPath, string $size = 'medium'): array
     {
+        // Check if it's an external URL
+        if (filter_var($originalPath, FILTER_VALIDATE_URL)) {
+            // Return external URL as-is for both webp and jpeg (no optimization)
+            return [
+                'webp' => $originalPath,
+                'jpeg' => $originalPath,
+            ];
+        }
+
         // Validate size
         if (!isset(self::SIZES[$size])) {
             throw new \InvalidArgumentException("Invalid size: {$size}");
