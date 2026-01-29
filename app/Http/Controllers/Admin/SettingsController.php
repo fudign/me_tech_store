@@ -24,6 +24,17 @@ class SettingsController extends Controller
             'map_latitude' => Setting::get('site.map_latitude', '42.8746'),
             'map_longitude' => Setting::get('site.map_longitude', '74.5698'),
 
+            // Social media
+            'social_instagram' => Setting::get('site.social_instagram', ''),
+            'social_facebook' => Setting::get('site.social_facebook', ''),
+            'social_youtube' => Setting::get('site.social_youtube', ''),
+
+            // Footer blocks
+            'footer_catalog_title' => Setting::get('footer.catalog_title', 'Каталог'),
+            'footer_clients_title' => Setting::get('footer.clients_title', 'Клиентам'),
+            'footer_clients_text' => Setting::get('footer.clients_text', "Связаться с нами\nГарантия\nДоставка"),
+            'footer_contacts_title' => Setting::get('footer.contacts_title', 'Контакты'),
+
             // Hero banner settings
             'hero_badge' => Setting::get('hero.badge', 'Новинка'),
             'hero_title' => Setting::get('hero.title', 'Xiaomi 14 Ultra'),
@@ -56,6 +67,17 @@ class SettingsController extends Controller
             // Map coordinates validation
             'map_coordinates' => 'nullable|string|max:50',
 
+            // Social media validation
+            'social_instagram' => 'nullable|url|max:255',
+            'social_facebook' => 'nullable|url|max:255',
+            'social_youtube' => 'nullable|url|max:255',
+
+            // Footer blocks validation
+            'footer_catalog_title' => 'nullable|string|max:100',
+            'footer_clients_title' => 'nullable|string|max:100',
+            'footer_clients_text' => 'nullable|string|max:500',
+            'footer_contacts_title' => 'nullable|string|max:100',
+
             // Hero banner validation
             'hero_badge' => 'nullable|string|max:50',
             'hero_title' => 'nullable|string|max:200',
@@ -71,6 +93,17 @@ class SettingsController extends Controller
         Setting::set('site.email', $request->email);
         Setting::set('site.footer_text', $request->footer_text ?? '');
         Setting::set('site.whatsapp', $request->whatsapp ?? '');
+
+        // Social media
+        Setting::set('site.social_instagram', $request->social_instagram ?? '');
+        Setting::set('site.social_facebook', $request->social_facebook ?? '');
+        Setting::set('site.social_youtube', $request->social_youtube ?? '');
+
+        // Footer blocks
+        Setting::set('footer.catalog_title', $request->footer_catalog_title ?? 'Каталог');
+        Setting::set('footer.clients_title', $request->footer_clients_title ?? 'Клиентам');
+        Setting::set('footer.clients_text', $request->footer_clients_text ?? "Связаться с нами\nГарантия\nДоставка");
+        Setting::set('footer.contacts_title', $request->footer_contacts_title ?? 'Контакты');
 
         // Parse and save map coordinates
         if ($request->filled('map_coordinates')) {

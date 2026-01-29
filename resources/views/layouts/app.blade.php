@@ -252,30 +252,47 @@
                         {{ \App\Models\Setting::get('site.footer_text', 'Премиальный магазин электроники Xiaomi. Мы предоставляем лучшие устройства с официальной гарантией и превосходным сервисом.') }}
                     </p>
                     <div class="flex gap-4 pt-2">
-                        <a href="#" class="text-gray-400 hover:text-brand-500 transition-colors"><iconify-icon icon="logos:instagram-icon" width="20"></iconify-icon></a>
-                        <a href="#" class="text-gray-400 hover:text-brand-500 transition-colors"><iconify-icon icon="logos:facebook" width="20"></iconify-icon></a>
-                        <a href="#" class="text-gray-400 hover:text-brand-500 transition-colors"><iconify-icon icon="logos:youtube-icon" width="20"></iconify-icon></a>
+                        @php
+                            $instagram = \App\Models\Setting::get('site.social_instagram', '');
+                            $facebook = \App\Models\Setting::get('site.social_facebook', '');
+                            $youtube = \App\Models\Setting::get('site.social_youtube', '');
+                        @endphp
+                        @if($instagram)
+                            <a href="{{ $instagram }}" target="_blank" class="text-gray-400 hover:text-brand-500 transition-colors"><iconify-icon icon="logos:instagram-icon" width="20"></iconify-icon></a>
+                        @endif
+                        @if($facebook)
+                            <a href="{{ $facebook }}" target="_blank" class="text-gray-400 hover:text-brand-500 transition-colors"><iconify-icon icon="logos:facebook" width="20"></iconify-icon></a>
+                        @endif
+                        @if($youtube)
+                            <a href="{{ $youtube }}" target="_blank" class="text-gray-400 hover:text-brand-500 transition-colors"><iconify-icon icon="logos:youtube-icon" width="20"></iconify-icon></a>
+                        @endif
                     </div>
                 </div>
 
                 <div class="space-y-4">
-                    <h4 class="font-medium text-gray-900 text-sm">Каталог</h4>
+                    <h4 class="font-medium text-gray-900 text-sm">{{ \App\Models\Setting::get('footer.catalog_title', 'Каталог') }}</h4>
                     <ul class="space-y-2 text-sm text-gray-500">
                         <li><a href="{{ route('products.index') }}" class="hover:text-brand-500 transition-colors">Все товары</a></li>
                     </ul>
                 </div>
 
                 <div class="space-y-4">
-                    <h4 class="font-medium text-gray-900 text-sm">Клиентам</h4>
+                    <h4 class="font-medium text-gray-900 text-sm">{{ \App\Models\Setting::get('footer.clients_title', 'Клиентам') }}</h4>
                     <ul class="space-y-2 text-sm text-gray-500">
-                        <li><a href="#" class="hover:text-brand-500 transition-colors">Связаться с нами</a></li>
-                        <li><a href="#" class="hover:text-brand-500 transition-colors">Гарантия</a></li>
-                        <li><a href="#" class="hover:text-brand-500 transition-colors">Доставка</a></li>
+                        @php
+                            $clientsText = \App\Models\Setting::get('footer.clients_text', "Связаться с нами\nГарантия\nДоставка");
+                            $clientsLines = explode("\n", $clientsText);
+                        @endphp
+                        @foreach($clientsLines as $line)
+                            @if(trim($line))
+                                <li><a href="#" class="hover:text-brand-500 transition-colors">{{ trim($line) }}</a></li>
+                            @endif
+                        @endforeach
                     </ul>
                 </div>
 
                 <div class="space-y-4">
-                    <h4 class="font-medium text-gray-900 text-sm">Контакты</h4>
+                    <h4 class="font-medium text-gray-900 text-sm">{{ \App\Models\Setting::get('footer.contacts_title', 'Контакты') }}</h4>
                     <ul class="space-y-2 text-sm text-gray-500">
                         <li class="flex items-start gap-2">
                             <iconify-icon icon="solar:map-point-linear" class="mt-0.5 shrink-0"></iconify-icon>

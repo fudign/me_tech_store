@@ -160,6 +160,156 @@
                 </div>
             </div>
 
+            <!-- Social Media & Footer Section -->
+            <div class="p-6 border-t border-gray-200">
+                <div class="mb-6">
+                    <h2 class="text-lg font-semibold text-gray-900">Социальные сети</h2>
+                    <p class="text-sm text-gray-500 mt-1">Ссылки на социальные сети в футере сайта</p>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Instagram -->
+                    <div>
+                        <label for="social_instagram" class="block text-sm font-medium text-gray-700 mb-2">
+                            Instagram
+                        </label>
+                        <input
+                            type="url"
+                            id="social_instagram"
+                            name="social_instagram"
+                            value="{{ old('social_instagram', $settings['social_instagram'] ?? '') }}"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('social_instagram') border-red-500 @enderror"
+                            placeholder="https://instagram.com/your_account"
+                        >
+                        @error('social_instagram')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Ссылка на страницу в Instagram</p>
+                    </div>
+
+                    <!-- Facebook -->
+                    <div>
+                        <label for="social_facebook" class="block text-sm font-medium text-gray-700 mb-2">
+                            Facebook
+                        </label>
+                        <input
+                            type="url"
+                            id="social_facebook"
+                            name="social_facebook"
+                            value="{{ old('social_facebook', $settings['social_facebook'] ?? '') }}"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('social_facebook') border-red-500 @enderror"
+                            placeholder="https://facebook.com/your_page"
+                        >
+                        @error('social_facebook')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Ссылка на страницу в Facebook</p>
+                    </div>
+
+                    <!-- YouTube -->
+                    <div>
+                        <label for="social_youtube" class="block text-sm font-medium text-gray-700 mb-2">
+                            YouTube
+                        </label>
+                        <input
+                            type="url"
+                            id="social_youtube"
+                            name="social_youtube"
+                            value="{{ old('social_youtube', $settings['social_youtube'] ?? '') }}"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('social_youtube') border-red-500 @enderror"
+                            placeholder="https://youtube.com/@your_channel"
+                        >
+                        @error('social_youtube')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Ссылка на канал YouTube</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Blocks Section -->
+            <div class="p-6 border-t border-gray-200">
+                <div class="mb-6">
+                    <h2 class="text-lg font-semibold text-gray-900">Блоки в футере</h2>
+                    <p class="text-sm text-gray-500 mt-1">Заголовки и описания для блоков информации в футере</p>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- Catalog Block -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="font-medium text-gray-900 mb-4">Блок "Каталог"</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="footer_catalog_title" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Заголовок
+                                </label>
+                                <input
+                                    type="text"
+                                    id="footer_catalog_title"
+                                    name="footer_catalog_title"
+                                    value="{{ old('footer_catalog_title', $settings['footer_catalog_title'] ?? 'Каталог') }}"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Каталог"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clients Block -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="font-medium text-gray-900 mb-4">Блок "Клиентам"</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="footer_clients_title" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Заголовок
+                                </label>
+                                <input
+                                    type="text"
+                                    id="footer_clients_title"
+                                    name="footer_clients_title"
+                                    value="{{ old('footer_clients_title', $settings['footer_clients_title'] ?? 'Клиентам') }}"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Клиентам"
+                                >
+                            </div>
+                            <div>
+                                <label for="footer_clients_text" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Текст/Описание
+                                </label>
+                                <textarea
+                                    id="footer_clients_text"
+                                    name="footer_clients_text"
+                                    rows="3"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Связаться с нами&#10;Гарантия&#10;Доставка"
+                                >{{ old('footer_clients_text', $settings['footer_clients_text'] ?? "Связаться с нами\nГарантия\nДоставка") }}</textarea>
+                                <p class="mt-1 text-xs text-gray-500">Каждая строка - отдельный пункт</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contacts Block -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="font-medium text-gray-900 mb-4">Блок "Контакты"</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="footer_contacts_title" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Заголовок
+                                </label>
+                                <input
+                                    type="text"
+                                    id="footer_contacts_title"
+                                    name="footer_contacts_title"
+                                    value="{{ old('footer_contacts_title', $settings['footer_contacts_title'] ?? 'Контакты') }}"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Контакты"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Hero Banner Section -->
             <div class="p-6 border-t border-gray-200">
                 <div class="mb-6">
