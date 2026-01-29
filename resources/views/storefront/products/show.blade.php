@@ -161,7 +161,8 @@
 
     <!-- Description and Specifications (below images) -->
     @if($product->description || $product->specifications)
-        <div class="mt-8 space-y-8 clear-both">
+        <div class="clear-both"></div>
+        <div class="mt-12 space-y-8 w-full">
             @if($product->description)
                 <div class="prose max-w-none">
                     <h2 class="text-xl font-semibold mb-2">Описание</h2>
