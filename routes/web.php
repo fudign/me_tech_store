@@ -116,6 +116,54 @@ Route::get('/test-db-connection', function () {
     }
 });
 
+// TEST ORDERS TABLE - REMOVE AFTER TESTING
+Route::get('/test-orders-table', function () {
+    try {
+        // Check if orders table exists
+        $ordersTableExists = DB::getSchemaBuilder()->hasTable('orders');
+        $orderItemsTableExists = DB::getSchemaBuilder()->hasTable('order_items');
+
+        $ordersCount = 0;
+        $orderItemsCount = 0;
+        $migrations = [];
+
+        if ($ordersTableExists) {
+            $ordersCount = \App\Models\Order::count();
+        }
+
+        if ($orderItemsTableExists) {
+            $orderItemsCount = DB::table('order_items')->count();
+        }
+
+        // Check migrations
+        try {
+            $migrations = DB::table('migrations')->orderBy('batch', 'desc')->get();
+        } catch (\Exception $e) {
+            $migrations = ['error' => $e->getMessage()];
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'tables' => [
+                'orders' => $ordersTableExists,
+                'order_items' => $orderItemsTableExists,
+            ],
+            'counts' => [
+                'orders' => $ordersCount,
+                'order_items' => $orderItemsCount,
+            ],
+            'migrations' => $migrations,
+            'timestamp' => now()->toDateTimeString()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
+});
+
 // Temporary route to clear PostgreSQL cached plans - REMOVE AFTER USE
 Route::get('/clear-db-cache-temp-2026', function () {
     try {
