@@ -21,9 +21,9 @@ class ImageUploadService
         // Check if running on Vercel (read-only filesystem)
         $isVercel = $this->isVercel();
 
-        if ($isVercel && $this->hasSupabaseConfig()) {
-            // Use Supabase Storage for production
-            return $this->uploadToSupabase($file, $folder);
+        if ($isVercel && $this->hasCloudinaryConfig()) {
+            // Use Cloudinary for production
+            return $this->uploadToCloudinary($file, $folder);
         } else {
             // Use local storage for development
             return $this->uploadToLocal($file, $folder);
@@ -60,39 +60,50 @@ class ImageUploadService
     }
 
     /**
-     * Upload to Supabase Storage
+     * Upload to Cloudinary
      *
      * @param UploadedFile $file
      * @param string $folder
      * @return string URL of uploaded file
      */
-    protected function uploadToSupabase(UploadedFile $file, string $folder): string
+    protected function uploadToCloudinary(UploadedFile $file, string $folder): string
     {
-        $supabaseUrl = config('services.supabase.url');
-        $supabaseKey = config('services.supabase.service_key') ?: config('services.supabase.key');
-        $bucket = config('services.supabase.storage_bucket', 'products');
+        $cloudName = config('services.cloudinary.cloud_name');
+        $apiKey = config('services.cloudinary.api_key');
+        $apiSecret = config('services.cloudinary.api_secret');
 
         // Generate unique filename
-        $filename = Str::random(40) . '.' . $file->getClientOriginalExtension();
-        $path = $folder . '/' . $filename;
+        $filename = Str::random(40);
 
-        // Upload to Supabase Storage
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $supabaseKey,
-            'Content-Type' => $file->getMimeType(),
-        ])->attach(
-            'file',
-            $file->get(),
-            $filename
-        )->post("{$supabaseUrl}/storage/v1/object/{$bucket}/{$path}");
+        // Create signature for upload
+        $timestamp = time();
+        $paramsToSign = [
+            'folder' => $folder,
+            'public_id' => $filename,
+            'timestamp' => $timestamp,
+        ];
+
+        ksort($paramsToSign);
+        $signatureString = http_build_query($paramsToSign, '', '&', PHP_QUERY_RFC3986);
+        $signature = sha1($signatureString . $apiSecret);
+
+        // Upload to Cloudinary
+        $response = Http::asMultipart()
+            ->attach('file', $file->get(), $file->getClientOriginalName())
+            ->post("https://api.cloudinary.com/v1_1/{$cloudName}/image/upload", [
+                'api_key' => $apiKey,
+                'timestamp' => $timestamp,
+                'signature' => $signature,
+                'folder' => $folder,
+                'public_id' => $filename,
+            ]);
 
         if ($response->successful()) {
-            // Return public URL
-            return "{$supabaseUrl}/storage/v1/object/public/{$bucket}/{$path}";
+            $data = $response->json();
+            return $data['secure_url'] ?? $data['url'];
         }
 
-        // Fallback: If Supabase upload fails, try to save locally (will fail on Vercel but works for dev)
-        throw new \RuntimeException('Failed to upload to Supabase Storage: ' . $response->body());
+        throw new \RuntimeException('Failed to upload to Cloudinary: ' . $response->body());
     }
 
     /**
@@ -106,14 +117,15 @@ class ImageUploadService
     }
 
     /**
-     * Check if Supabase config is available
+     * Check if Cloudinary config is available
      *
      * @return bool
      */
-    protected function hasSupabaseConfig(): bool
+    protected function hasCloudinaryConfig(): bool
     {
-        return !empty(config('services.supabase.url'))
-            && !empty(config('services.supabase.key'));
+        return !empty(config('services.cloudinary.cloud_name'))
+            && !empty(config('services.cloudinary.api_key'))
+            && !empty(config('services.cloudinary.api_secret'));
     }
 
     /**
