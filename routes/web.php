@@ -137,3 +137,46 @@ Route::get('/clear-db-cache-temp-2026', function () {
         ], 500);
     }
 });
+
+// Update product images endpoint (temporary for deployment) - REMOVE AFTER USE
+Route::get('/update-product-images-temp-2026', function () {
+    try {
+        $imageUrls = [
+            'https://2pml6fgury6oq.ok.kimi.link/images/products/redmi-note-13-pro-plus.jpg',
+            'https://2pml6fgury6oq.ok.kimi.link/images/products/redmi-13c.jpg',
+            'https://2pml6fgury6oq.ok.kimi.link/images/products/iphone-15-pro.jpg',
+            'https://2pml6fgury6oq.ok.kimi.link/images/products/samsung-galaxy-s24.jpg',
+            'https://2pml6fgury6oq.ok.kimi.link/images/products/xiaomi-14.jpg',
+            'https://2pml6fgury6oq.ok.kimi.link/images/products/airpods-pro.jpg',
+        ];
+
+        $products = DB::table('products')->select('id')->get();
+        $updated = 0;
+
+        foreach ($products as $index => $product) {
+            $imageUrl = $imageUrls[$index % count($imageUrls)];
+            $imagesJson = json_encode([$imageUrl]);
+
+            DB::table('products')
+                ->where('id', $product->id)
+                ->update([
+                    'main_image' => $imageUrl,
+                    'images' => $imagesJson,
+                ]);
+
+            $updated++;
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => "Updated {$updated} products with images!",
+            'timestamp' => now()->toDateTimeString()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
+});
