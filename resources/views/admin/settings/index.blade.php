@@ -310,6 +310,46 @@
                 </div>
             </div>
 
+            <!-- Product Contact Info Section -->
+            <div class="p-6 border-t border-gray-200">
+                <div class="mb-6">
+                    <h2 class="text-lg font-semibold text-gray-900">Контактная информация на странице товара</h2>
+                    <p class="text-sm text-gray-500 mt-1">Этот текст будет отображаться на каждой странице товара</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label for="product_contact_info" class="block text-sm font-medium text-gray-700 mb-2">
+                            Текст контактной информации
+                        </label>
+                        <textarea
+                            id="product_contact_info"
+                            name="product_contact_info"
+                            rows="15"
+                            maxlength="2000"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('product_contact_info') border-red-500 @enderror font-mono text-sm"
+                            placeholder="Уточняйте наличие по телефонам:&#10;+996 700 916 121&#10;+996 551 916 122&#10;&#10;Адреса:&#10;Шопоково 123"
+                        >{{ old('product_contact_info', $settings['product_contact_info'] ?? '') }}</textarea>
+                        @error('product_contact_info')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Форматирование (переносы строк) будет сохранено при отображении</p>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div class="flex gap-3">
+                            <iconify-icon icon="solar:info-circle-linear" width="20" class="text-blue-600 flex-shrink-0 mt-0.5"></iconify-icon>
+                            <div>
+                                <p class="text-sm text-blue-900 font-medium mb-1">Где отображается?</p>
+                                <p class="text-sm text-blue-800 leading-relaxed">
+                                    Этот текст будет показан на странице каждого товара в виде информационного блока с контактами и адресами магазинов.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Hero Banner Section -->
             <div class="p-6 border-t border-gray-200">
                 <div class="mb-6">

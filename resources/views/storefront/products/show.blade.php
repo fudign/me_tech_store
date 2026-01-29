@@ -125,6 +125,24 @@
                 @endif
             </div>
 
+            <!-- Contact Information Block -->
+            @php
+                $contactInfo = \App\Models\Setting::get('product.contact_info', '');
+            @endphp
+            @if($contactInfo)
+                <div class="mt-8 bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-200 rounded-xl p-6 shadow-sm">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="bg-orange-500 text-white p-2 rounded-lg flex-shrink-0">
+                            <iconify-icon icon="solar:phone-calling-bold" width="24"></iconify-icon>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">Контакты и адреса</h3>
+                            <div class="text-sm text-gray-700 whitespace-pre-line leading-relaxed">{{ $contactInfo }}</div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <script>
             function addToCart(productId) {
                 this.adding = true;

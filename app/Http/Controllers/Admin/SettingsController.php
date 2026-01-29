@@ -35,6 +35,9 @@ class SettingsController extends Controller
             'footer_clients_text' => Setting::get('footer.clients_text', "Связаться с нами\nГарантия\nДоставка"),
             'footer_contacts_title' => Setting::get('footer.contacts_title', 'Контакты'),
 
+            // Product contact info
+            'product_contact_info' => Setting::get('product.contact_info', "Уточняйте наличие по телефонам:\n+996 700 916 121\n+996 551 916 122\n\nАдреса:\nШопоково 123\n(Ориентир Медерова - Панфилова)\nс 10-00 до 19-00\nСуббота: с 10-00 до 17-00\nВоскресенье: с 10-00 до 17-00\n\nБазар Ак Эммир\nс 10-00 до 20-00\nбез обеда и без выходных"),
+
             // Hero banner settings
             'hero_badge' => Setting::get('hero.badge', 'Новинка'),
             'hero_title' => Setting::get('hero.title', 'Xiaomi 14 Ultra'),
@@ -78,6 +81,9 @@ class SettingsController extends Controller
             'footer_clients_text' => 'nullable|string|max:500',
             'footer_contacts_title' => 'nullable|string|max:100',
 
+            // Product contact info validation
+            'product_contact_info' => 'nullable|string|max:2000',
+
             // Hero banner validation
             'hero_badge' => 'nullable|string|max:50',
             'hero_title' => 'nullable|string|max:200',
@@ -104,6 +110,9 @@ class SettingsController extends Controller
         Setting::set('footer.clients_title', $request->footer_clients_title ?? 'Клиентам');
         Setting::set('footer.clients_text', $request->footer_clients_text ?? "Связаться с нами\nГарантия\nДоставка");
         Setting::set('footer.contacts_title', $request->footer_contacts_title ?? 'Контакты');
+
+        // Product contact info
+        Setting::set('product.contact_info', $request->product_contact_info ?? '');
 
         // Parse and save map coordinates
         if ($request->filled('map_coordinates')) {
