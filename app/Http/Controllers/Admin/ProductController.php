@@ -61,6 +61,7 @@ class ProductController extends Controller
         $imagePaths = [];
         $mainImagePath = null;
 
+        // Handle file uploads
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
                 $path = $imageUploadService->upload($image, 'products');
@@ -69,6 +70,30 @@ class ProductController extends Controller
                 // Set main image
                 if ($index == ($request->main_image_index ?? 0)) {
                     $mainImagePath = $path;
+                }
+            }
+        }
+
+        // Handle URL uploads
+        if ($request->filled('image_urls')) {
+            $urls = array_filter(array_map('trim', explode("\n", $request->image_urls)));
+            $startIndex = count($imagePaths);
+
+            foreach ($urls as $index => $url) {
+                if (filter_var($url, FILTER_VALIDATE_URL)) {
+                    try {
+                        $path = $imageUploadService->uploadFromUrl($url, 'products');
+                        $imagePaths[] = $path;
+
+                        // Set main image for URL uploads
+                        $actualIndex = $startIndex + $index;
+                        if ($actualIndex == ($request->main_image_index ?? 0)) {
+                            $mainImagePath = $path;
+                        }
+                    } catch (\Exception $e) {
+                        // Log error but continue with other images
+                        \Log::error('Failed to upload image from URL: ' . $url . ' - ' . $e->getMessage());
+                    }
                 }
             }
         }
@@ -158,8 +183,8 @@ class ProductController extends Controller
         $imagePaths = $product->images ?? [];
         $mainImagePath = $product->main_image;
 
-        // If new images uploaded, delete old ones and replace
-        if ($request->hasFile('images')) {
+        // If new images uploaded or URLs provided, delete old ones and replace
+        if ($request->hasFile('images') || $request->filled('image_urls')) {
             // Delete old images
             if (!empty($product->images)) {
                 $imageUploadService->deleteMultiple($product->images);
@@ -167,13 +192,41 @@ class ProductController extends Controller
 
             // Upload new images
             $imagePaths = [];
-            foreach ($request->file('images') as $index => $image) {
-                $path = $imageUploadService->upload($image, 'products');
-                $imagePaths[] = $path;
 
-                // Set main image
-                if ($index == ($request->main_image_index ?? 0)) {
-                    $mainImagePath = $path;
+            // Handle file uploads
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $index => $image) {
+                    $path = $imageUploadService->upload($image, 'products');
+                    $imagePaths[] = $path;
+
+                    // Set main image
+                    if ($index == ($request->main_image_index ?? 0)) {
+                        $mainImagePath = $path;
+                    }
+                }
+            }
+
+            // Handle URL uploads
+            if ($request->filled('image_urls')) {
+                $urls = array_filter(array_map('trim', explode("\n", $request->image_urls)));
+                $startIndex = count($imagePaths);
+
+                foreach ($urls as $index => $url) {
+                    if (filter_var($url, FILTER_VALIDATE_URL)) {
+                        try {
+                            $path = $imageUploadService->uploadFromUrl($url, 'products');
+                            $imagePaths[] = $path;
+
+                            // Set main image for URL uploads
+                            $actualIndex = $startIndex + $index;
+                            if ($actualIndex == ($request->main_image_index ?? 0)) {
+                                $mainImagePath = $path;
+                            }
+                        } catch (\Exception $e) {
+                            // Log error but continue with other images
+                            \Log::error('Failed to upload image from URL: ' . $url . ' - ' . $e->getMessage());
+                        }
+                    }
                 }
             }
 

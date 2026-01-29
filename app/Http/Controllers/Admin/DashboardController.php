@@ -23,15 +23,14 @@ class DashboardController extends Controller
         // Main statistics
         $stats = [
             'total_revenue' => Order::whereIn('status', [Order::STATUS_COMPLETED, Order::STATUS_DELIVERING])
-                ->sum('total_amount'),
+                ->sum('total'),
             'total_orders' => Order::count(),
-            'total_customers' => User::whereNotNull('email_verified_at')->count(),
             'total_products' => Product::active()->count(),
 
             // Monthly stats
             'monthly_revenue' => Order::whereIn('status', [Order::STATUS_COMPLETED, Order::STATUS_DELIVERING])
                 ->where('created_at', '>=', $thisMonth)
-                ->sum('total_amount'),
+                ->sum('total'),
             'monthly_orders' => Order::where('created_at', '>=', $thisMonth)->count(),
 
             // New orders count
@@ -52,7 +51,7 @@ class DashboardController extends Controller
 
         // Last 7 days orders chart data
         $last7DaysOrders = Order::where('created_at', '>=', $last7Days)
-            ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'), DB::raw('sum(total_amount) as revenue'))
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'), DB::raw('sum(total) as revenue'))
             ->groupBy('date')
             ->orderBy('date')
             ->get();
@@ -84,21 +83,12 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // Low stock products (less than 10)
-        $lowStockProducts = Product::active()
-            ->where('stock', '<', 10)
-            ->where('stock', '>', 0)
-            ->orderBy('stock')
-            ->limit(5)
-            ->get();
-
         return view('admin.dashboard.index', compact(
             'stats',
             'ordersByStatus',
             'chartData',
             'topProducts',
-            'recentOrders',
-            'lowStockProducts'
+            'recentOrders'
         ));
     }
 }

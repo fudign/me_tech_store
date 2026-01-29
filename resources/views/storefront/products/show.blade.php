@@ -4,17 +4,17 @@
 @section('meta_description', $product->meta_description ?? $product->description)
 
 @section('content')
-<div class="container mx-auto px-4 py-8 max-w-7xl">
+<div class="container mx-auto px-4 md:px-6 py-6 md:py-8 max-w-7xl">
     <!-- Breadcrumb -->
-    <nav class="text-sm text-gray-600 mb-4">
+    <nav class="text-xs md:text-sm text-gray-600 mb-4 overflow-x-auto whitespace-nowrap pb-2">
         <a href="{{ route('home') }}" class="hover:underline">Главная</a>
         @foreach($product->categories as $category)
             / <a href="{{ route('category.show', $category) }}" class="hover:underline">{{ $category->name }}</a>
         @endforeach
-        / <span>{{ $product->name }}</span>
+        / <span class="text-gray-900">{{ $product->name }}</span>
     </nav>
 
-    <div class="grid md:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
         <!-- Product Images -->
         <div>
             @if($product->main_image)
@@ -46,24 +46,24 @@
 
         <!-- Product Info & Contact -->
         <div>
-            <h1 class="text-3xl font-bold mb-4">{{ $product->name }}</h1>
+            <h1 class="text-2xl md:text-3xl font-bold mb-4 leading-tight">{{ $product->name }}</h1>
 
-            <div class="flex items-baseline gap-3 mb-6">
-                <span class="text-4xl font-bold text-orange-600">
+            <div class="flex flex-wrap items-baseline gap-2 md:gap-3 mb-4 md:mb-6">
+                <span class="text-3xl md:text-4xl font-bold text-orange-600">
                     {{ number_format($product->price / 100, 0) }} сом
                 </span>
 
                 @if($product->old_price)
-                    <span class="text-xl line-through text-gray-500">
+                    <span class="text-lg md:text-xl line-through text-gray-500">
                         {{ number_format($product->old_price / 100, 0) }} сом
                     </span>
-                    <span class="bg-red-500 text-white px-2 py-1 rounded text-sm">
+                    <span class="bg-red-500 text-white px-2 py-1 rounded text-xs md:text-sm font-semibold">
                         -{{ round((($product->old_price - $product->price) / $product->old_price) * 100) }}%
                     </span>
                 @endif
             </div>
 
-            <div class="mb-6">
+            <div class="mb-4 md:mb-6">
                 @php
                     $statusText = match($product->availability_status ?? 'in_stock') {
                         'in_stock' => '✓ В наличии',
@@ -78,15 +78,15 @@
                         default => 'text-green-600'
                     };
                 @endphp
-                <p class="{{ $statusClass }} font-semibold">{{ $statusText }}</p>
+                <p class="{{ $statusClass }} font-semibold text-sm md:text-base">{{ $statusText }}</p>
             </div>
 
             <!-- Add to Cart Button -->
-            <div x-data="{ adding: false }" class="mb-8">
+            <div x-data="{ adding: false }" class="mb-6 md:mb-8">
                 @if(($product->availability_status ?? 'in_stock') === 'in_stock')
                     <button @click="addToCart({{ $product->id }})"
                             :disabled="adding"
-                            class="w-full bg-brand-500 text-white py-3 rounded-lg font-semibold hover:bg-brand-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            class="w-full bg-brand-500 text-white py-3.5 md:py-4 rounded-xl font-semibold hover:bg-brand-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-98 text-sm md:text-base">
                         <span x-show="!adding">Добавить в корзину</span>
                         <span x-show="adding">Добавление...</span>
                     </button>
@@ -98,7 +98,7 @@
                             default => 'Нет в наличии'
                         };
                     @endphp
-                    <button disabled class="w-full bg-gray-300 text-gray-500 py-3 rounded-lg font-semibold cursor-not-allowed">
+                    <button disabled class="w-full bg-gray-300 text-gray-500 py-3.5 md:py-4 rounded-xl font-semibold cursor-not-allowed text-sm md:text-base">
                         {{ $buttonText }}
                     </button>
                 @endif
@@ -109,13 +109,18 @@
                 $contactInfo = \App\Models\Setting::get('product.contact_info', '');
             @endphp
             @if($contactInfo)
-                <div class="mt-6 text-sm leading-relaxed text-gray-700">
-                    <div class="font-semibold text-gray-900 mb-2">Уточняйте наличие по телефонам:</div>
-                    @foreach(explode("\n", $contactInfo) as $line)
-                        @if(trim($line))
-                            <div class="mb-1">{{ trim($line) }}</div>
-                        @endif
-                    @endforeach
+                <div class="mt-4 md:mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                    <div class="font-semibold text-gray-900 mb-2 text-sm md:text-base flex items-center gap-2">
+                        <iconify-icon icon="solar:phone-calling-linear" width="20"></iconify-icon>
+                        Уточняйте наличие:
+                    </div>
+                    <div class="space-y-1 text-xs md:text-sm text-gray-700">
+                        @foreach(explode("\n", $contactInfo) as $line)
+                            @if(trim($line))
+                                <div>{{ trim($line) }}</div>
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
             @endif
 
@@ -162,25 +167,33 @@
     <!-- Description and Specifications (below images) -->
     @if($product->description || $product->specifications)
         <div class="clear-both"></div>
-        <div class="mt-12 space-y-8 w-full">
+        <div class="mt-8 md:mt-12 space-y-6 md:space-y-8 w-full">
             @if($product->description)
-                <div class="prose max-w-none">
-                    <h2 class="text-xl font-semibold mb-2">Описание</h2>
-                    <p class="text-gray-700">{{ $product->description }}</p>
+                <div class="bg-white rounded-xl border border-gray-200 p-4 md:p-6">
+                    <h2 class="text-lg md:text-xl font-semibold mb-3 md:mb-4 flex items-center gap-2">
+                        <iconify-icon icon="solar:document-text-linear" width="24"></iconify-icon>
+                        Описание
+                    </h2>
+                    <p class="text-sm md:text-base text-gray-700 leading-relaxed">{{ $product->description }}</p>
                 </div>
             @endif
 
             @if($product->specifications)
-                <div>
-                    <h2 class="text-xl font-semibold mb-3">Характеристики</h2>
-                    <table class="w-full">
-                        @foreach($product->specifications as $key => $value)
-                            <tr class="border-b">
-                                <td class="py-2 text-gray-600">{{ $key }}</td>
-                                <td class="py-2 font-semibold">{{ $value }}</td>
-                            </tr>
-                        @endforeach
-                    </table>
+                <div class="bg-white rounded-xl border border-gray-200 p-4 md:p-6">
+                    <h2 class="text-lg md:text-xl font-semibold mb-3 md:mb-4 flex items-center gap-2">
+                        <iconify-icon icon="solar:list-check-linear" width="24"></iconify-icon>
+                        Характеристики
+                    </h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm md:text-base">
+                            @foreach($product->specifications as $key => $value)
+                                <tr class="border-b border-gray-100 last:border-0">
+                                    <td class="py-2.5 md:py-3 text-gray-600 pr-4">{{ $key }}</td>
+                                    <td class="py-2.5 md:py-3 font-semibold text-gray-900">{{ $value }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
                 </div>
             @endif
         </div>

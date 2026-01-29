@@ -75,6 +75,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::delete('/orders/{order}', [AdminOrderController::class, 'destroy'])->name('orders.destroy');
 
     Route::resource('products', AdminProductController::class);
     Route::resource('categories', AdminCategoryController::class);

@@ -248,6 +248,31 @@
                                 </template>
                             </div>
                         </div>
+
+                        <!-- OR Divider -->
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                                <div class="w-full border-t border-gray-300"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-2 bg-white text-gray-500">или</span>
+                            </div>
+                        </div>
+
+                        <!-- Image URL Input -->
+                        <div>
+                            <label for="image_urls" class="block text-sm font-medium text-gray-700 mb-2">
+                                Ссылки на изображения (URL)
+                            </label>
+                            <textarea name="image_urls"
+                                      id="image_urls"
+                                      rows="4"
+                                      placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg&#10;https://example.com/image3.jpg"
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-sm">{{ old('image_urls') }}</textarea>
+                            <p class="mt-1 text-xs text-gray-500">
+                                Введите ссылки на изображения (каждая ссылка на новой строке). Макс. 10 изображений всего.
+                            </p>
+                        </div>
                     </div>
                 </div>
 

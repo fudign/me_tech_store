@@ -51,7 +51,7 @@
                 </svg>
             </div>
             <p class="text-2xl font-bold text-gray-800">{{ number_format($stats['total_products']) }}</p>
-            <p class="text-sm text-gray-500 mt-1">Клиентов: {{ number_format($stats['total_customers']) }}</p>
+            <p class="text-sm text-gray-500 mt-1">В каталоге</p>
         </div>
     </div>
 
@@ -99,7 +99,7 @@
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900">
                                     @if($order->items->count() > 0)
-                                        {{ $order->items->first()->product->name ?? 'Товар удален' }}
+                                        {{ $order->items->first()->product_name ?? 'Товар удален' }}
                                         @if($order->items->count() > 1)
                                             <span class="text-gray-500">и еще {{ $order->items->count() - 1 }}</span>
                                         @endif

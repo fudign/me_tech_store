@@ -171,6 +171,25 @@
                     </form>
                 </div>
             </div>
+
+            <!-- Delete Order Card -->
+            <div class="bg-white rounded-lg shadow border border-red-200">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-red-900">Опасная зона</h2>
+                </div>
+                <div class="px-6 py-4">
+                    <p class="text-sm text-gray-600 mb-4">
+                        Удаление заказа необратимо. Все данные о заказе будут потеряны.
+                    </p>
+                    <form method="POST" action="{{ route('admin.orders.destroy', $order) }}" onsubmit="return confirm('Вы уверены, что хотите удалить этот заказ? Это действие необратимо.');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors">
+                            Удалить заказ
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>

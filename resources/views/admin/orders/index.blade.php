@@ -3,6 +3,83 @@
 @section('page-title', 'Заказы')
 
 @section('content')
+<!-- Search and Filters -->
+<div class="bg-white rounded-lg shadow mb-6 p-4">
+    <form method="GET" action="{{ route('admin.orders.index') }}" class="space-y-4 md:space-y-0 md:flex md:items-end md:gap-4">
+        <!-- Search -->
+        <div class="flex-1">
+            <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Поиск</label>
+            <input
+                type="text"
+                name="search"
+                id="search"
+                value="{{ request('search') }}"
+                placeholder="Номер заказа, имя или телефон"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+        </div>
+
+        <!-- Status Filter -->
+        <div class="w-full md:w-48">
+            <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Статус</label>
+            <select
+                name="status"
+                id="status"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+                <option value="">Все статусы</option>
+                @foreach(App\Models\Order::statusLabels() as $value => $label)
+                    <option value="{{ $value }}" {{ request('status') === $value ? 'selected' : '' }}>
+                        {{ $label }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex gap-2">
+            <button
+                type="submit"
+                class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+            >
+                Поиск
+            </button>
+            @if(request('search') || request('status'))
+                <a
+                    href="{{ route('admin.orders.index') }}"
+                    class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg transition-colors"
+                >
+                    Сбросить
+                </a>
+            @endif
+        </div>
+    </form>
+
+    <!-- Status Counts -->
+    <div class="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-2">
+        <a href="{{ route('admin.orders.index') }}"
+           class="px-3 py-1.5 text-sm rounded-full transition-colors {{ !request('status') ? 'bg-blue-100 text-blue-800 font-semibold' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+            Все ({{ $statusCounts['all'] }})
+        </a>
+        <a href="{{ route('admin.orders.index', ['status' => 'new']) }}"
+           class="px-3 py-1.5 text-sm rounded-full transition-colors {{ request('status') === 'new' ? 'bg-blue-100 text-blue-800 font-semibold' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+            Новые ({{ $statusCounts['new'] }})
+        </a>
+        <a href="{{ route('admin.orders.index', ['status' => 'processing']) }}"
+           class="px-3 py-1.5 text-sm rounded-full transition-colors {{ request('status') === 'processing' ? 'bg-yellow-100 text-yellow-800 font-semibold' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+            В обработке ({{ $statusCounts['processing'] }})
+        </a>
+        <a href="{{ route('admin.orders.index', ['status' => 'delivering']) }}"
+           class="px-3 py-1.5 text-sm rounded-full transition-colors {{ request('status') === 'delivering' ? 'bg-orange-100 text-orange-800 font-semibold' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+            Доставляется ({{ $statusCounts['delivering'] }})
+        </a>
+        <a href="{{ route('admin.orders.index', ['status' => 'completed']) }}"
+           class="px-3 py-1.5 text-sm rounded-full transition-colors {{ request('status') === 'completed' ? 'bg-green-100 text-green-800 font-semibold' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+            Выполнено ({{ $statusCounts['completed'] }})
+        </a>
+    </div>
+</div>
+
 <div class="bg-white rounded-lg shadow">
     @if($orders->count() > 0)
         <!-- Orders Table - Desktop -->

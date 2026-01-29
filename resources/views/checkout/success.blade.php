@@ -6,11 +6,11 @@
 <div class="max-w-3xl mx-auto px-6 py-12">
     <!-- Success Icon and Message -->
     <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
-            <iconify-icon icon="solar:check-circle-bold" width="48" class="text-green-600"></iconify-icon>
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4 animate-bounce-once">
+            <iconify-icon icon="solar:check-circle-bold" width="48" class="text-green-600 animate-scale-in"></iconify-icon>
         </div>
-        <h1 class="text-3xl font-semibold text-gray-900 mb-2">Спасибо за ваш заказ!</h1>
-        <p class="text-gray-600">Ваш заказ успешно оформлен и принят в обработку</p>
+        <h1 class="text-3xl font-semibold text-gray-900 mb-2 animate-fade-in-up">Спасибо за ваш заказ!</h1>
+        <p class="text-gray-600 animate-fade-in-up" style="animation-delay: 0.1s;">Ваш заказ успешно оформлен и принят в обработку</p>
     </div>
 
     <!-- Order Details Card -->
@@ -121,4 +121,51 @@
         </a>
     </div>
 </div>
+
+<style>
+@keyframes bounce-once {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+@keyframes scale-in {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes fade-in-up {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-bounce-once {
+    animation: bounce-once 0.6s ease-out;
+}
+
+.animate-scale-in {
+    animation: scale-in 0.5s ease-out;
+}
+
+.animate-fade-in-up {
+    animation: fade-in-up 0.5s ease-out forwards;
+    opacity: 0;
+}
+</style>
 @endsection

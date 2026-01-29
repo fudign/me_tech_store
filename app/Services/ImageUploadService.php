@@ -140,4 +140,96 @@ class ImageUploadService
             $this->delete($path);
         }
     }
+
+    /**
+     * Download image from URL and upload to storage
+     *
+     * @param string $url
+     * @param string $folder
+     * @return string Path or URL of uploaded image
+     * @throws \Exception
+     */
+    public function uploadFromUrl(string $url, string $folder = 'products'): string
+    {
+        try {
+            // Download image from URL
+            $response = Http::timeout(10)->get($url);
+
+            if (!$response->successful()) {
+                throw new \Exception('Failed to download image from URL: ' . $response->status());
+            }
+
+            // Get content type and validate it's an image
+            $contentType = $response->header('Content-Type');
+            $validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+            if (!in_array($contentType, $validTypes)) {
+                throw new \Exception('Invalid image type. Only JPG, PNG, and WEBP are supported.');
+            }
+
+            // Determine file extension from content type
+            $extension = match($contentType) {
+                'image/jpeg', 'image/jpg' => 'jpg',
+                'image/png' => 'png',
+                'image/webp' => 'webp',
+                default => 'jpg'
+            };
+
+            // Check file size (max 2MB)
+            $size = strlen($response->body());
+            if ($size > 2097152) { // 2MB in bytes
+                throw new \Exception('Image size exceeds 2MB limit.');
+            }
+
+            // Create temporary file
+            $tempPath = sys_get_temp_dir() . '/' . Str::random(40) . '.' . $extension;
+            file_put_contents($tempPath, $response->body());
+
+            // Create UploadedFile instance
+            $uploadedFile = new UploadedFile(
+                $tempPath,
+                basename($tempPath),
+                $contentType,
+                null,
+                true // Mark as test to allow temporary file
+            );
+
+            // Upload using existing method
+            $path = $this->upload($uploadedFile, $folder);
+
+            // Clean up temporary file
+            if (file_exists($tempPath)) {
+                unlink($tempPath);
+            }
+
+            return $path;
+        } catch (\Exception $e) {
+            throw new \Exception('Failed to upload image from URL: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Upload multiple images from URLs
+     *
+     * @param array $urls Array of URLs
+     * @param string $folder
+     * @return array Array of paths/URLs
+     */
+    public function uploadMultipleFromUrls(array $urls, string $folder = 'products'): array
+    {
+        $paths = [];
+
+        foreach ($urls as $url) {
+            if (filter_var($url, FILTER_VALIDATE_URL)) {
+                try {
+                    $paths[] = $this->uploadFromUrl($url, $folder);
+                } catch (\Exception $e) {
+                    // Skip failed uploads and continue
+                    \Log::error('Failed to upload image from URL: ' . $url . ' - ' . $e->getMessage());
+                }
+            }
+        }
+
+        return $paths;
+    }
 }

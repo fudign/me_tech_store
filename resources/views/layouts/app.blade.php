@@ -48,43 +48,38 @@
 
     <!-- Top Bar -->
     <div class="bg-white border-b border-gray-100 text-xs text-gray-500">
-        <div class="max-w-7xl mx-auto px-6 h-10 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <span class="flex items-center gap-1.5 hover:text-gray-900 cursor-pointer transition-colors">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 h-10 flex items-center justify-between">
+            <div class="flex items-center gap-2 md:gap-4">
+                <a href="tel:{{ \App\Models\Setting::get('site.phone', '+996 (555) 00-00-00') }}" class="flex items-center gap-1.5 hover:text-gray-900 cursor-pointer transition-colors">
                     <iconify-icon icon="solar:phone-calling-linear" stroke-width="1.5"></iconify-icon>
-                    {{ \App\Models\Setting::get('site.phone', '+996 (555) 00-00-00') }}
-                </span>
-                <span class="hidden sm:flex items-center gap-1.5 hover:text-gray-900 cursor-pointer transition-colors">
+                    <span class="hidden sm:inline">{{ \App\Models\Setting::get('site.phone', '+996 (555) 00-00-00') }}</span>
+                </a>
+                <span class="hidden lg:flex items-center gap-1.5 hover:text-gray-900 cursor-pointer transition-colors">
                     <iconify-icon icon="solar:map-point-linear" stroke-width="1.5"></iconify-icon>
                     {{ \App\Models\Setting::get('site.address', 'Бишкек, пр. Манаса 101') }}
                 </span>
             </div>
-            <div class="flex items-center gap-4">
-                <a href="#" class="hover:text-gray-900 transition-colors">Поддержка</a>
-                <a href="#" class="hover:text-gray-900 transition-colors">Гарантия</a>
-                <div class="w-px h-3 bg-gray-200"></div>
+            <div class="flex items-center gap-2 md:gap-4">
+                <a href="#" class="hidden md:inline hover:text-gray-900 transition-colors">Поддержка</a>
+                <a href="#" class="hidden md:inline hover:text-gray-900 transition-colors">Гарантия</a>
+                <div class="hidden md:block w-px h-3 bg-gray-200"></div>
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-1 hover:text-brand-500 transition-colors font-medium">
                     <iconify-icon icon="solar:settings-linear" width="14" stroke-width="2"></iconify-icon>
-                    Админ-панель
+                    <span class="hidden lg:inline">Админ-панель</span>
                 </a>
-                <div class="w-px h-3 bg-gray-200"></div>
-                <div class="flex items-center gap-2 cursor-pointer hover:text-gray-900">
-                    <span>Русский</span>
-                    <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon>
-                </div>
             </div>
         </div>
     </div>
 
     <!-- Header / Navigation -->
-    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-6 h-16 md:h-20 flex items-center justify-between gap-8">
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100" x-data="{ mobileMenuOpen: false }">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between gap-4 md:gap-8">
             <!-- Logo -->
-            <a href="{{ route('home') }}" class="flex items-center gap-2 group">
-                <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center text-white text-lg font-semibold group-hover:scale-105 transition-transform duration-300">
+            <a href="{{ route('home') }}" class="flex items-center gap-2 group flex-shrink-0">
+                <div class="w-7 h-7 md:w-8 md:h-8 bg-brand-500 rounded-lg flex items-center justify-center text-white text-base md:text-lg font-semibold group-hover:scale-105 transition-transform duration-300">
                     mi
                 </div>
-                <span class="text-xl tracking-tight font-semibold text-gray-900">Mi Tech</span>
+                <span class="text-lg md:text-xl tracking-tight font-semibold text-gray-900">Mi Tech</span>
             </a>
 
             <!-- Search -->
@@ -143,22 +138,23 @@
             </form>
 
             <!-- Actions -->
-            <div class="flex items-center gap-2 md:gap-4" x-data="{ cartCount: {{ Cart::getTotalQuantity() }}, wishlistCount: {{ count(session('wishlist', [])) }} }" @cart-updated.window="cartCount = $event.detail.count" @wishlist-updated.window="wishlistCount = $event.detail.count">
+            <div class="flex items-center gap-1 md:gap-4" x-data="{ cartCount: {{ Cart::getTotalQuantity() }}, wishlistCount: {{ count(session('wishlist', [])) }} }" @cart-updated.window="cartCount = $event.detail.count" @wishlist-updated.window="wishlistCount = $event.detail.count">
                 <a href="{{ route('wishlist.index') }}" class="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-full transition-all relative">
-                    <iconify-icon icon="solar:heart-linear" width="24" stroke-width="1.5"></iconify-icon>
+                    <iconify-icon icon="solar:heart-linear" width="22" stroke-width="1.5" class="md:w-6"></iconify-icon>
                     <span x-show="wishlistCount > 0"
                           x-text="wishlistCount"
-                          class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold"></span>
+                          class="absolute top-0 right-0 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold"></span>
                 </a>
-                <a href="{{ route('cart.index') }}" class="flex items-center gap-2 pl-2 pr-4 py-1.5 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-all active:scale-95 group">
+                <a href="{{ route('cart.index') }}" class="flex items-center gap-1 md:gap-2 pl-2 pr-3 md:pr-4 py-1.5 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-all active:scale-95 group">
                     <div class="relative">
-                        <iconify-icon icon="solar:cart-large-minimalistic-linear" width="20" stroke-width="1.5"></iconify-icon>
-                        <span x-show="cartCount > 0" x-text="cartCount" class="absolute -top-1 -right-1 bg-brand-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold"></span>
+                        <iconify-icon icon="solar:cart-large-minimalistic-linear" width="18" stroke-width="1.5" class="md:w-5"></iconify-icon>
+                        <span x-show="cartCount > 0" x-text="cartCount" class="absolute -top-1 -right-1 bg-brand-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold"></span>
                     </div>
-                    <span class="text-sm font-medium cart-count">Корзина</span>
+                    <span class="text-xs md:text-sm font-medium cart-count hidden sm:inline">Корзина</span>
                 </a>
-                <button class="md:hidden p-2 text-gray-900">
-                    <iconify-icon icon="solar:hamburger-menu-linear" width="24" stroke-width="1.5"></iconify-icon>
+                <button @click="mobileMenuOpen = !mobileMenuOpen"
+                        class="md:hidden p-2 text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                    <iconify-icon :icon="mobileMenuOpen ? 'solar:close-circle-linear' : 'solar:hamburger-menu-linear'" width="24" stroke-width="1.5"></iconify-icon>
                 </button>
             </div>
         </div>
@@ -232,6 +228,98 @@
                 @endisset
             </ul>
         </nav>
+
+        <!-- Mobile Menu Drawer -->
+        <div x-show="mobileMenuOpen"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @click="mobileMenuOpen = false"
+             class="fixed inset-0 bg-black/50 z-50 md:hidden"
+             style="display: none;">
+        </div>
+
+        <div x-show="mobileMenuOpen"
+             x-transition:enter="transition ease-out duration-300 transform"
+             x-transition:enter-start="translate-x-full"
+             x-transition:enter-end="translate-x-0"
+             x-transition:leave="transition ease-in duration-200 transform"
+             x-transition:leave-start="translate-x-0"
+             x-transition:leave-end="translate-x-full"
+             class="fixed top-0 right-0 bottom-0 w-4/5 max-w-sm bg-white shadow-2xl z-50 overflow-y-auto md:hidden"
+             style="display: none;">
+
+            <div class="p-6">
+                <!-- Mobile Menu Header -->
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center text-white text-lg font-semibold">
+                            mi
+                        </div>
+                        <span class="text-xl tracking-tight font-semibold text-gray-900">Mi Tech</span>
+                    </div>
+                    <button @click="mobileMenuOpen = false" class="p-2 hover:bg-gray-100 rounded-lg">
+                        <iconify-icon icon="solar:close-circle-linear" width="24"></iconify-icon>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Links -->
+                <nav class="space-y-1">
+                    <a href="{{ route('home') }}" class="block px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium {{ Request::is('/') ? 'bg-brand-50 text-brand-600' : 'text-gray-900' }}">
+                        <iconify-icon icon="solar:home-2-linear" width="20" class="inline mr-2"></iconify-icon>
+                        Главная
+                    </a>
+                    <a href="{{ route('products.index') }}" class="block px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium text-gray-900">
+                        <iconify-icon icon="solar:bag-4-linear" width="20" class="inline mr-2"></iconify-icon>
+                        Все товары
+                    </a>
+
+                    <!-- Categories -->
+                    @isset($categories)
+                        <div class="pt-4 pb-2">
+                            <h3 class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Категории</h3>
+                        </div>
+                        @foreach($categories as $category)
+                            <a href="{{ route('category.show', $category) }}" class="block px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
+                                <iconify-icon icon="solar:smartphone-2-linear" width="18" class="inline mr-2"></iconify-icon>
+                                {{ $category->name }}
+                            </a>
+                        @endforeach
+                    @endisset
+
+                    <!-- Additional Links -->
+                    <div class="pt-4 pb-2">
+                        <h3 class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Помощь</h3>
+                    </div>
+                    <a href="#" class="block px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
+                        <iconify-icon icon="solar:help-linear" width="18" class="inline mr-2"></iconify-icon>
+                        Поддержка
+                    </a>
+                    <a href="#" class="block px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
+                        <iconify-icon icon="solar:verified-check-linear" width="18" class="inline mr-2"></iconify-icon>
+                        Гарантия
+                    </a>
+                </nav>
+
+                <!-- Contact Info -->
+                <div class="mt-8 p-4 bg-gray-50 rounded-xl">
+                    <h3 class="font-semibold text-gray-900 mb-3 text-sm">Контакты</h3>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <a href="tel:{{ \App\Models\Setting::get('site.phone', '+996 (555) 00-00-00') }}" class="flex items-center gap-2 hover:text-brand-500">
+                            <iconify-icon icon="solar:phone-calling-linear" width="16"></iconify-icon>
+                            {{ \App\Models\Setting::get('site.phone', '+996 (555) 00-00-00') }}
+                        </a>
+                        <div class="flex items-start gap-2">
+                            <iconify-icon icon="solar:map-point-linear" width="16" class="mt-0.5 flex-shrink-0"></iconify-icon>
+                            <span>{{ \App\Models\Setting::get('site.address', 'Бишкек, пр. Манаса 101') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
 
     <!-- Main Content -->
@@ -240,10 +328,10 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-100 pt-16 pb-8 mt-20">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
-                <div class="col-span-2 lg:col-span-2 space-y-4 pr-8">
+    <footer class="bg-white border-t border-gray-100 pt-12 md:pt-16 pb-6 md:pb-8 mt-12 md:mt-20">
+        <div class="max-w-7xl mx-auto px-4 md:px-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-8 mb-8 md:mb-12">
+                <div class="col-span-1 sm:col-span-2 lg:col-span-2 space-y-3 md:space-y-4">
                     <a href="{{ route('home') }}" class="flex items-center gap-2 mb-4">
                         <div class="w-6 h-6 bg-brand-500 rounded flex items-center justify-center text-white text-xs font-bold">mi</div>
                         <span class="text-lg font-semibold text-gray-900 tracking-tight">Mi Tech</span>
@@ -316,19 +404,19 @@
                 $mapLng = \App\Models\Setting::get('site.map_longitude', '74.5698');
             @endphp
             @if($mapLat && $mapLng)
-            <div class="mt-12">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Наш магазин на карте</h3>
-                <div class="w-full h-[400px] rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+            <div class="mt-8 md:mt-12">
+                <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4">Наш магазин на карте</h3>
+                <div class="w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden border border-gray-200 shadow-sm">
                     <div id="map" class="w-full h-full"></div>
                 </div>
             </div>
             @endif
 
-            <div class="border-t border-gray-100 pt-8 mt-12 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-400">
-                <p>&copy; 2024 Mi Tech KG. Все права защищены.</p>
-                <div class="flex gap-4 grayscale opacity-50">
-                    <iconify-icon icon="logos:visa" width="30"></iconify-icon>
-                    <iconify-icon icon="logos:mastercard" width="24"></iconify-icon>
+            <div class="border-t border-gray-100 pt-6 md:pt-8 mt-8 md:mt-12 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 text-xs text-gray-400">
+                <p class="text-center md:text-left">&copy; 2024 Mi Tech KG. Все права защищены.</p>
+                <div class="flex gap-3 md:gap-4 grayscale opacity-50">
+                    <iconify-icon icon="logos:visa" width="28"></iconify-icon>
+                    <iconify-icon icon="logos:mastercard" width="22"></iconify-icon>
                 </div>
             </div>
         </div>

@@ -57,6 +57,7 @@ class UpdateProductRequest extends FormRequest
             'categories.*' => ['exists:categories,id'],
             'images' => ['nullable', 'array', 'max:10'],
             'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image_urls' => ['nullable', 'string'],
             'main_image_index' => ['nullable', 'integer', 'min:0'],
             'attributes' => ['nullable', 'array'],
             'attributes.*.key' => ['required_with:attributes', 'string', 'max:100'],

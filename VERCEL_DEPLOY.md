@@ -1,169 +1,258 @@
-# 5?;>9 =0 Vercel - >;=0O 8=AB@C:F8O
+# 🚀 Деплой Mi Tech Store на Vercel
 
-## 1. >43>B>2:0 : 45?;>N
+Пошаговая инструкция по развертыванию Laravel проекта на Vercel.
 
-### "@51>20=8O
-- ::0C=B =0 Vercel (A2O70==K9 A GitHub)
-- 070 40==KE PostgreSQL (@5:><5=4C5BAO Supabase)
-- APP_KEY 4;O Laravel
+## 📋 Предварительные требования
 
-## 2. 5=5@0F8O APP_KEY
+- Аккаунт на [Vercel](https://vercel.com)
+- Аккаунт на GitHub/GitLab/Bitbucket
+- База данных (рекомендуется: PlanetScale, Supabase или Railway)
+- Cloudinary аккаунт для хранения изображений
 
-K?>;=8B5 ;>:0;L=>:
+## 🔧 Шаг 1: Подготовка проекта
+
+Все необходимые файлы уже созданы:
+- ✅ `vercel.json` - конфигурация Vercel
+- ✅ `api/index.php` - точка входа для serverless функций
+- ✅ `.vercelignore` - файлы для игнорирования
+
+## 🗄️ Шаг 2: Настройка базы данных
+
+### Вариант A: PlanetScale (рекомендуется для MySQL)
+
+1. Зарегистрируйтесь на [PlanetScale](https://planetscale.com/)
+2. Создайте новую базу данных
+3. Получите connection string (формат: `mysql://user:pass@host/database?sslaccept=strict`)
+
+### Вариант B: Supabase (PostgreSQL)
+
+1. Зарегистрируйтесь на [Supabase](https://supabase.com/)
+2. Создайте новый проект
+3. Получите connection string из Settings → Database
+
+### Вариант C: Railway (MySQL/PostgreSQL)
+
+1. Зарегистрируйтесь на [Railway](https://railway.app/)
+2. Создайте MySQL или PostgreSQL сервис
+3. Получите connection string
+
+## 📤 Шаг 3: Загрузка на GitHub
+
 ```bash
-php artisan key:generate --show
+# Инициализируйте git репозиторий (если еще не сделано)
+git init
+
+# Добавьте все файлы
+git add .
+
+# Создайте коммит
+git commit -m "Initial commit for Vercel deployment"
+
+# Добавьте remote репозиторий
+git remote add origin https://github.com/ваш-username/mi-tech-store.git
+
+# Отправьте на GitHub
+git push -u origin main
 ```
 
-!:>?8@C9B5 ?>;CG5==K9 :;NG (D>@<0B: `base64:...`)
+## 🌐 Шаг 4: Деплой на Vercel
 
-## 3. !>740=85 ?@>5:B0 =0 Vercel
+### Через Vercel Dashboard:
 
-1. 5@5948B5 =0 [vercel.com](https://vercel.com)
-2. >948B5 G5@57 GitHub
-3. 06<8B5 "Add New Project"
-4. K15@8B5 @5?>78B>@89 `me_tech_store`
+1. Войдите на [Vercel](https://vercel.com)
+2. Нажмите **"Add New"** → **"Project"**
+3. Импортируйте ваш GitHub репозиторий
+4. Настройте следующие параметры:
 
-### 0AB@>9:8 ?@>5:B0:
+**Framework Preset:** Other
+**Root Directory:** ./
+**Build Command:** `composer install --no-dev --optimize-autoloader && npm install && npm run build`
+**Output Directory:** public
 
-- **Framework Preset**: Other
-- **Build Command**: `npm run vercel-build`
-- **Output Directory**: (>AB02LB5 ?CABK<)
-- **Install Command**: `npm install`
+### Через Vercel CLI:
 
-## 4. 0AB@>9:0 ?5@5<5==KE >:@C65=8O
+```bash
+# Установите Vercel CLI
+npm i -g vercel
 
-5@5948B5 2 Settings � Environment Variables 8 4>102LB5:
+# Войдите в Vercel
+vercel login
 
-### 1O70B5;L=K5 ?5@5<5==K5:
+# Деплой проекта
+vercel
 
+# Для production деплоя
+vercel --prod
+```
+
+## ⚙️ Шаг 5: Environment Variables
+
+В Vercel Dashboard → Settings → Environment Variables, добавьте:
+
+### Основные переменные:
 ```env
-APP_NAME=Mi Tech Store
+APP_NAME="Mi Tech Store"
 APP_ENV=production
-APP_KEY=base64:(_.'__(_2
+APP_KEY=base64:ВАШ_КЛЮЧ_ИЗ_php_artisan_key:generate
 APP_DEBUG=false
-APP_URL=https://20H-4><5=.vercel.app
-APP_TIMEZONE=Asia/Bishkek
-APP_LOCALE=ru
+APP_URL=https://ваш-домен.vercel.app
+
+LOG_CHANNEL=stderr
+LOG_LEVEL=error
 ```
 
-### 070 40==KE (PostgreSQL/Supabase):
-
+### База данных:
 ```env
-DB_CONNECTION=pgsql
-DB_HOST=db.wtevayfmmvrbtevxsbwh.supabase.co
-DB_PORT=5432
-DB_DATABASE=postgres
-DB_USERNAME=postgres
-DB_PASSWORD=(_ ,_SUPABASE
+DB_CONNECTION=mysql
+DB_HOST=ваш-хост
+DB_PORT=3306
+DB_DATABASE=ваша-база
+DB_USERNAME=пользователь
+DB_PASSWORD=пароль
 ```
 
-### Supabase (5A;8 8A?>;L7C5BAO):
-
+### Cloudinary (для изображений):
 ```env
-SUPABASE_URL=https://wtevayfmmvrbtevxsbwh.supabase.co
-SUPABASE_KEY=20H_supabase_anon_key
-SUPABASE_SERVICE_KEY=20H_supabase_service_key
+CLOUDINARY_CLOUD_NAME=ваше-имя
+CLOUDINARY_API_KEY=ваш-ключ
+CLOUDINARY_API_SECRET=ваш-секрет
+CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name
 ```
 
-### >=D83C@0F8O 4;O Vercel:
-
+### Session и Cache:
 ```env
 SESSION_DRIVER=cookie
-CACHE_STORE=array
-LOG_CHANNEL=stderr
-QUEUE_CONNECTION=sync
+SESSION_LIFETIME=120
 SESSION_SECURE_COOKIE=true
-SESSION_SAME_SITE=lax
+
+CACHE_DRIVER=array
+QUEUE_CONNECTION=sync
 ```
 
-## 5. 5?;>9
+### Почта (опционально):
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=ваш-username
+MAIL_PASSWORD=ваш-пароль
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=noreply@example.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
 
-06<8B5 :=>?:C "Deploy" 8 4>648B5AL 7025@H5=8O A1>@:8.
+## 🔑 Шаг 6: Генерация APP_KEY
 
-## 6. 803=>AB8:0 ?@>1;5<
+```bash
+# Локально выполните
+php artisan key:generate --show
 
-### A;8 ?>;CG8;8 >H81:C 500:
+# Скопируйте полученный ключ (начинается с base64:)
+# И добавьте его в Environment Variables на Vercel
+```
 
-1. **@>25@LB5 ?>4@>1=CN >H81:C:**
-   - B:@>9B5 20H A09B 2 1@0C75@5
-   - K C2848B5 45B0;L=>5 >?8A0=85 >H81:8
-   - @>25@LB5 A>>1I5=85 >1 >H81:5
+## 🗃️ Шаг 7: Миграция базы данных
 
-2. **803=>AB8G5A:0O AB@0=8F0:**
-   >102LB5 : URL ?0@0<5B@ `?_vercel_debug=true`
-   ```
-   https://20H-4><5=.vercel.app?_vercel_debug=true
-   ```
-   -B> ?>:065B:
-   - 5@A8N PHP
-   - #AB0=>2;5==K5 ?5@5<5==K5 >:@C65=8O
-   - 0;8G85 =5>1E>48<KE D09;>2
-   - @020 4>ABC?0 : 48@5:B>@8O<
+После успешного деплоя, выполните миграции:
 
-3. **@>25@LB5 ;>38 Vercel:**
-   - 5@5948B5 2 Deployments
-   - K15@8B5 ?>A;54=89 45?;>9
-   - B:@>9B5 2:;04:C "Logs"
-   - 0948B5 AB@>:8 A "VERCEL ERROR"
+### Вариант A: Через локальное подключение
+```bash
+# Установите переменные окружения локально из Vercel
+# Затем выполните:
+php artisan migrate --force
+php artisan db:seed --force
+```
 
-### '0ABK5 ?@>1;5<K:
+### Вариант B: Через Vercel CLI
+```bash
+vercel env pull .env.production
+php artisan migrate --force --env=production
+```
 
-#### L "No application encryption key has been specified"
-** 5H5=85:** APP_KEY =5 CAB0=>2;5= 8;8 =525@=K9 D>@<0B
-- !35=5@8@C9B5 =>2K9 :;NG: `php artisan key:generate --show`
-- #1548B5AL, GB> D>@<0B: `base64:xxxxx`
+## 📁 Шаг 8: Настройка хранилища файлов
 
-#### L "SQLSTATE[08006] Connection refused"
-** 5H5=85:** @>1;5<K A 107>9 40==KE
-- @>25@LB5 DB_HOST, DB_USERNAME, DB_PASSWORD
-- #1548B5AL, GB> 1070 40==KE 4>ABC?=0 872=5
-- @>25@LB5, GB> DB_PORT=5432
+Так как Vercel использует read-only файловую систему, используйте Cloudinary для всех загрузок:
 
-#### L "Class 'X' not found"
-** 5H5=85:** @>1;5<K A composer 7028A8<>ABO<8
-- @>25@LB5 Build Logs 2 Vercel
-- #1548B5AL, GB> `composer install` 2K?>;=8;AO CA?5H=>
+1. Убедитесь, что все изображения загружаются через Cloudinary
+2. В админ-панели настройте Cloudinary credentials
+3. Протестируйте загрузку изображений
 
-#### L "View not found" 8;8 ?@>1;5<K A ?CBO<8
-** 5H5=85:** @>1;5<K A :MH5< 8;8 ?CBO<8
-- G8AB8B5 :MH: Redeploy ?@>5:B0
-- @>25@LB5, GB> VIEW_COMPILED_PATH =0AB@>5=
+## 🔍 Шаг 9: Проверка работы
 
-## 7. >A;5 CA?5H=>3> 45?;>O
+После деплоя проверьте:
 
-1. 1=>28B5 APP_URL =0 @50;L=K9 4><5= Vercel
-2. #AB0=>28B5 APP_DEBUG=false 4;O ?@>40:H5=0
-3. 0AB@>9B5 custom domain (>?F8>=0;L=>)
-4. @>25@LB5 @01>BC:
-   - ;02=0O AB@0=8F0
-   - 0B0;>3 B>20@>2
-   - 4<8=-?0=5;L `/admin/login`
+- ✅ Главная страница загружается
+- ✅ Страницы товаров отображаются
+- ✅ Корзина работает
+- ✅ Поиск функционирует
+- ✅ Админ-панель доступна
+- ✅ Загрузка изображений работает
 
-## 8. 2B><0B8G5A:85 >1=>2;5=8O
+## 🐛 Troubleshooting
 
->A;5 CA?5H=>3> 45?;>O:
-- 064K9 `git push` 2 25B:C `main` 02B><0B8G5A:8 7045?;>8BAO
-- Preview deployments A>740NBAO 4;O pull requests
-- Rollback 4>ABC?5= 2 ;N1>9 <><5=B G5@57 Vercel Dashboard
+### Ошибка 500
+- Проверьте логи: `vercel logs`
+- Убедитесь, что APP_KEY установлен
+- Проверьте подключение к БД
 
-## 9. 06=K5 >3@0=8G5=8O Vercel
+### Изображения не загружаются
+- Убедитесь, что Cloudinary настроен правильно
+- Проверьте CLOUDINARY_URL в environment variables
 
-1. **$09;>20O A8AB5<0 read-only**
-   - 03@C65==K5 D09;K =5 A>E@0=ONBAO
-   - A?>;L7C9B5 Supabase Storage 8;8 S3 4;O D09;>2
+### Session не работает
+- Установите `SESSION_DRIVER=cookie`
+- Убедитесь, что `SESSION_SECURE_COOKIE=true` для HTTPS
 
-2. **57 D>=>2>3> 2K?>;=5=8O**
-   - Queues @01>B0NB B>;L:> sync
-   - Scheduled tasks =5 ?>445@6820NBAO
+### База данных не подключается
+- Проверьте все DB_* переменные
+- Убедитесь, что firewall БД разрешает подключения от Vercel
 
-3. **8<8BK 2@5<5=8 2K?>;=5=8O**
-   - 10 A5:C=4 4;O Hobby ?;0=
-   - 60 A5:C=4 4;O Pro ?;0=
+## 🔄 Автоматические деплои
 
-## 10. >445@6:0
+После настройки, каждый push в main ветку будет автоматически деплоиться на Vercel!
 
-A;8 ?@>1;5<0 =5 @5H05BAO:
-1. B:@>9B5 `?_vercel_debug=true`
-2. @>25@LB5 Vercel Logs
-3. @>25@LB5 45B0;L=CN >H81:C =0 AB@0=8F5
-4. #1548B5AL, GB> 2A5 ?5@5<5==K5 >:@C65=8O CAB0=>2;5=K
+```bash
+# Внесите изменения
+git add .
+git commit -m "Update feature"
+git push origin main
+
+# Vercel автоматически задеплоит изменения
+```
+
+## 📊 Мониторинг
+
+- **Логи:** https://vercel.com/your-project/logs
+- **Analytics:** https://vercel.com/your-project/analytics
+- **Speed Insights:** Включите в настройках проекта
+
+## 🎉 Готово!
+
+Ваш магазин теперь доступен на Vercel!
+
+### Полезные команды:
+
+```bash
+# Просмотр логов
+vercel logs
+
+# Откат к предыдущей версии
+vercel rollback
+
+# Просмотр всех деплоев
+vercel ls
+
+# Удалить проект
+vercel remove
+```
+
+## 📚 Дополнительные ресурсы
+
+- [Vercel Documentation](https://vercel.com/docs)
+- [Laravel Deployment](https://laravel.com/docs/deployment)
+- [PlanetScale MySQL](https://planetscale.com/docs)
+- [Cloudinary PHP SDK](https://cloudinary.com/documentation/php_integration)
+
+---
+
+🚨 **Важно:** Никогда не коммитьте `.env` файл с реальными credentials!
