@@ -101,27 +101,44 @@
                        @input.debounce.300ms="search"
                        @focus="showResults = true"
                        value="{{ request('q') }}"
-                       placeholder="Поиск товаров (например, Xiaomi 14)..."
+                       placeholder="Начните вводить название товара..."
                        class="w-full bg-gray-50 border border-gray-200 rounded-full py-2.5 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-brand-100 focus:border-brand-500 transition-all placeholder:text-gray-400"
                        maxlength="200"
                        autocomplete="off">
 
                 <!-- Dropdown results -->
-                <div x-show="showResults && results.length > 0"
+                <div x-show="showResults && (results.length > 0 || loading || (searched && results.length === 0))"
                      x-transition
                      class="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+
+                    <!-- Loading state -->
+                    <div x-show="loading" class="p-4 text-center text-gray-500">
+                        <iconify-icon icon="svg-spinners:ring-resize" width="24" class="inline-block"></iconify-icon>
+                        <span class="ml-2 text-sm">Поиск...</span>
+                    </div>
+
+                    <!-- Results -->
                     <template x-for="product in results" :key="product.id">
                         <a :href="product.url"
-                           class="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors">
+                           class="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0">
                             <img :src="product.image || '/placeholder.png'"
                                  :alt="product.name"
-                                 class="w-12 h-12 object-cover rounded">
+                                 class="w-12 h-12 object-cover rounded"
+                                 onerror="this.src='/placeholder.png'">
                             <div class="flex-1 min-w-0">
                                 <div class="text-sm font-medium text-gray-900 truncate" x-text="product.name"></div>
-                                <div class="text-xs text-gray-500" x-text="product.price"></div>
+                                <div class="text-xs text-brand-600 font-semibold" x-text="product.price"></div>
                             </div>
+                            <iconify-icon icon="solar:arrow-right-linear" width="20" class="text-gray-400"></iconify-icon>
                         </a>
                     </template>
+
+                    <!-- Empty state -->
+                    <div x-show="!loading && searched && results.length === 0" class="p-6 text-center">
+                        <iconify-icon icon="solar:magnifer-linear" width="48" class="text-gray-300 mb-2"></iconify-icon>
+                        <p class="text-sm text-gray-500">Ничего не найдено</p>
+                        <p class="text-xs text-gray-400 mt-1">Попробуйте другой запрос</p>
+                    </div>
                 </div>
             </form>
 
@@ -161,28 +178,45 @@
                        @input.debounce.300ms="search"
                        @focus="showResults = true"
                        value="{{ request('q') }}"
-                       placeholder="Поиск..."
+                       placeholder="Начните вводить название..."
                        class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-9 text-sm focus:border-brand-500 outline-none"
                        maxlength="200"
                        autocomplete="off">
             </div>
 
             <!-- Dropdown results -->
-            <div x-show="showResults && results.length > 0"
+            <div x-show="showResults && (results.length > 0 || loading || (searched && results.length === 0))"
                  x-transition
                  class="absolute left-6 right-6 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+
+                <!-- Loading state -->
+                <div x-show="loading" class="p-4 text-center text-gray-500">
+                    <iconify-icon icon="svg-spinners:ring-resize" width="24" class="inline-block"></iconify-icon>
+                    <span class="ml-2 text-sm">Поиск...</span>
+                </div>
+
+                <!-- Results -->
                 <template x-for="product in results" :key="product.id">
                     <a :href="product.url"
-                       class="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors">
+                       class="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0">
                         <img :src="product.image || '/placeholder.png'"
                              :alt="product.name"
-                             class="w-12 h-12 object-cover rounded">
+                             class="w-12 h-12 object-cover rounded"
+                             onerror="this.src='/placeholder.png'">
                         <div class="flex-1 min-w-0">
                             <div class="text-sm font-medium text-gray-900 truncate" x-text="product.name"></div>
-                            <div class="text-xs text-gray-500" x-text="product.price"></div>
+                            <div class="text-xs text-brand-600 font-semibold" x-text="product.price"></div>
                         </div>
+                        <iconify-icon icon="solar:arrow-right-linear" width="20" class="text-gray-400"></iconify-icon>
                     </a>
                 </template>
+
+                <!-- Empty state -->
+                <div x-show="!loading && searched && results.length === 0" class="p-6 text-center">
+                    <iconify-icon icon="solar:magnifer-linear" width="48" class="text-gray-300 mb-2"></iconify-icon>
+                    <p class="text-sm text-gray-500">Ничего не найдено</p>
+                    <p class="text-xs text-gray-400 mt-1">Попробуйте другой запрос</p>
+                </div>
             </div>
         </form>
 
@@ -296,11 +330,17 @@
             query: '{{ request('q') }}',
             results: [],
             showResults: false,
+            loading: false,
+            searched: false,
             async search() {
                 if (this.query.length < 2) {
                     this.results = [];
+                    this.searched = false;
                     return;
                 }
+
+                this.loading = true;
+                this.searched = true;
 
                 try {
                     const response = await fetch(`/search/autocomplete?q=${encodeURIComponent(this.query)}`);
@@ -309,6 +349,8 @@
                 } catch (error) {
                     console.error('Search autocomplete error:', error);
                     this.results = [];
+                } finally {
+                    this.loading = false;
                 }
             }
         }
