@@ -44,7 +44,7 @@
             @endif
         </div>
 
-        <!-- Product Info -->
+        <!-- Product Info & Contact -->
         <div>
             <h1 class="text-3xl font-bold mb-4">{{ $product->name }}</h1>
 
@@ -81,29 +81,8 @@
                 <p class="{{ $statusClass }} font-semibold">{{ $statusText }}</p>
             </div>
 
-            @if($product->description)
-                <div class="prose max-w-none mb-6">
-                    <h2 class="text-xl font-semibold mb-2">Описание</h2>
-                    <p class="text-gray-700">{{ $product->description }}</p>
-                </div>
-            @endif
-
-            @if($product->specifications)
-                <div class="mb-6">
-                    <h2 class="text-xl font-semibold mb-3">Характеристики</h2>
-                    <table class="w-full">
-                        @foreach($product->specifications as $key => $value)
-                            <tr class="border-b">
-                                <td class="py-2 text-gray-600">{{ $key }}</td>
-                                <td class="py-2 font-semibold">{{ $value }}</td>
-                            </tr>
-                        @endforeach
-                    </table>
-                </div>
-            @endif
-
             <!-- Add to Cart Button -->
-            <div x-data="{ adding: false }">
+            <div x-data="{ adding: false }" class="mb-8">
                 @if(($product->availability_status ?? 'in_stock') === 'in_stock')
                     <button @click="addToCart({{ $product->id }})"
                             :disabled="adding"
@@ -130,14 +109,15 @@
                 $contactInfo = \App\Models\Setting::get('product.contact_info', '');
             @endphp
             @if($contactInfo)
-                <div class="mt-8 space-y-2">
-                    @foreach(explode("\n", $contactInfo) as $line)
-                        @if(trim($line))
-                            <div class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium">
-                                {{ trim($line) }}
-                            </div>
-                        @endif
-                    @endforeach
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-gray-900 mb-3">Уточняйте наличие по телефонам:</h3>
+                    <div class="space-y-1 text-sm text-gray-700">
+                        @foreach(explode("\n", $contactInfo) as $line)
+                            @if(trim($line))
+                                <div>{{ trim($line) }}</div>
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
             @endif
 
@@ -180,5 +160,31 @@
             </script>
         </div>
     </div>
+
+    <!-- Description and Specifications (below images) -->
+    @if($product->description || $product->specifications)
+        <div class="mt-8 space-y-8">
+            @if($product->description)
+                <div class="prose max-w-none">
+                    <h2 class="text-xl font-semibold mb-2">Описание</h2>
+                    <p class="text-gray-700">{{ $product->description }}</p>
+                </div>
+            @endif
+
+            @if($product->specifications)
+                <div>
+                    <h2 class="text-xl font-semibold mb-3">Характеристики</h2>
+                    <table class="w-full">
+                        @foreach($product->specifications as $key => $value)
+                            <tr class="border-b">
+                                <td class="py-2 text-gray-600">{{ $key }}</td>
+                                <td class="py-2 font-semibold">{{ $value }}</td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
+            @endif
+        </div>
+    @endif
 </div>
 @endsection

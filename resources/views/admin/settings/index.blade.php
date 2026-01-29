@@ -328,7 +328,7 @@
                             rows="15"
                             maxlength="2000"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('product_contact_info') border-red-500 @enderror font-mono text-sm"
-                            placeholder="Уточняйте наличие по телефонам:&#10;+996 700 916 121&#10;+996 551 916 122&#10;&#10;Адреса:&#10;Шопоково 123"
+                            placeholder="+996 700 916 121&#10;+996 551 916 122&#10;Адреса:&#10;Гастелло 13&#10;(Ориентир Медерова - Панфилова)&#10;с 10-00 до 19-00&#10;Суббота: с 10-00 до 17-00&#10;Воскресенье: с 10-00 до 17-00&#10;ТЦ Бета Сторес 2. 2-Этаж.&#10;Отдел GADGET.KG&#10;с 10-00 до 20-00&#10;без обеда и без выходных"
                         >{{ old('product_contact_info', $settings['product_contact_info'] ?? '') }}</textarea>
                         @error('product_contact_info')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
