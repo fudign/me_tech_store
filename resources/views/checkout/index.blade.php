@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Оформление заказа | Xiaomi Store')
+@section('title', 'Оформление заказа | Mi Tech')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-6 py-12">

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $category->meta_title ?? $category->name . ' - Xiaomi Store')
+@section('title', $category->meta_title ?? $category->name . ' - Mi Tech')
 @section('meta_description', $category->meta_description ?? $category->description)
 
 @section('content')

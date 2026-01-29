@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Админ-панель') - Xiaomi Store</title>
+    <title>@yield('title', 'Админ-панель') - Mi Tech</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -30,7 +30,7 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-900 text-white flex-shrink-0">
             <div class="p-6">
-                <h1 class="text-2xl font-bold">Xiaomi Store</h1>
+                <h1 class="text-2xl font-bold">Mi Tech</h1>
                 <p class="text-gray-400 text-sm">Админ-панель</p>
             </div>
 

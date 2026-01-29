@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Корзина - Xiaomi Store')
+@section('title', 'Корзина - Mi Tech')
 
 @section('content')
 <div class="container mx-auto px-4 py-8 max-w-5xl">

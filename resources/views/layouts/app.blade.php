@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Xiaomi Store | Магазин электроники')</title>
+    <title>@yield('title', 'Mi Tech | Магазин электроники')</title>
 
     @if(isset($metaDescription) || View::hasSection('meta_description'))
         <meta name="description" content="@yield('meta_description', $metaDescription ?? '')">
@@ -84,7 +84,7 @@
                 <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center text-white text-lg font-semibold group-hover:scale-105 transition-transform duration-300">
                     mi
                 </div>
-                <span class="text-xl tracking-tight font-semibold text-gray-900">Xiaomi Store</span>
+                <span class="text-xl tracking-tight font-semibold text-gray-900">Mi Tech</span>
             </a>
 
             <!-- Search -->
@@ -212,7 +212,7 @@
                 <div class="col-span-2 lg:col-span-2 space-y-4 pr-8">
                     <a href="{{ route('home') }}" class="flex items-center gap-2 mb-4">
                         <div class="w-6 h-6 bg-brand-500 rounded flex items-center justify-center text-white text-xs font-bold">mi</div>
-                        <span class="text-lg font-semibold text-gray-900 tracking-tight">Xiaomi Store</span>
+                        <span class="text-lg font-semibold text-gray-900 tracking-tight">Mi Tech</span>
                     </a>
                     <p class="text-sm text-gray-500 leading-relaxed">
                         {{ \App\Models\Setting::get('site.footer_text', 'Премиальный магазин электроники Xiaomi. Мы предоставляем лучшие устройства с официальной гарантией и превосходным сервисом.') }}
@@ -274,7 +274,7 @@
             @endif
 
             <div class="border-t border-gray-100 pt-8 mt-12 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-400">
-                <p>&copy; 2024 Xiaomi Store KG. Все права защищены.</p>
+                <p>&copy; 2024 Mi Tech KG. Все права защищены.</p>
                 <div class="flex gap-4 grayscale opacity-50">
                     <iconify-icon icon="logos:visa" width="30"></iconify-icon>
                     <iconify-icon icon="logos:mastercard" width="24"></iconify-icon>
@@ -334,7 +334,7 @@
 
             const popupContent = `
                 <div style="padding: 10px; min-width: 200px;">
-                    <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #111;">Xiaomi Store</h3>
+                    <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #111;">Mi Tech</h3>
                     <p style="margin: 0 0 8px 0; font-size: 13px; color: #555; line-height: 1.5;">
                         <strong>Адрес:</strong><br>
                         {{ \App\Models\Setting::get('site.address', 'Бишкек, пр. Манаса 101') }}

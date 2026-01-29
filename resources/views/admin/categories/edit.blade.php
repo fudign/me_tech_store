@@ -164,7 +164,7 @@
                             </label>
                             <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-2">
                                 <div class="text-sm text-blue-600 truncate" style="max-width: 600px;">
-                                    {{ $category->meta_title ?: $category->name . ' Xiaomi - купить в Бишкеке | Xiaomi Store' }}
+                                    {{ $category->meta_title ?: $category->name . ' Xiaomi - купить в Бишкеке | Mi Tech' }}
                                 </div>
                                 <div class="text-xs text-green-700">
                                     {{ config('app.url') }}/categories/{{ $category->slug }}

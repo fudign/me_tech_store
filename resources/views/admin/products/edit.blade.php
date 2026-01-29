@@ -384,7 +384,7 @@
                             </label>
                             <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-2">
                                 <div class="text-sm text-blue-600 truncate" style="max-width: 600px;">
-                                    {{ $product->meta_title ?: 'Купить ' . $product->name . ' - цена ' . number_format($product->price / 100, 0, '', ' ') . ' сом в Бишкеке | Xiaomi Store' }}
+                                    {{ $product->meta_title ?: 'Купить ' . $product->name . ' - цена ' . number_format($product->price / 100, 0, '', ' ') . ' сом в Бишкеке | Mi Tech' }}
                                 </div>
                                 <div class="text-xs text-green-700">
                                     {{ config('app.url') }}/products/{{ $product->slug }}
