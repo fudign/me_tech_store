@@ -1,142 +1,169 @@
-# Деплой на Vercel - Инструкция
+# 5?;>9 =0 Vercel - >;=0O 8=AB@C:F8O
 
-## ⚠️ ВАЖНЫЕ ОГРАНИЧЕНИЯ
+## 1. >43>B>2:0 : 45?;>N
 
-Vercel не поддерживает полноценный Laravel из-за serverless архитектуры. Для продакшена рекомендуется использовать:
-- **Railway.app** (поддержка полного Laravel + MySQL + Storage)
-- **Heroku** (полная поддержка PHP)
-- **DigitalOcean App Platform**
-- **Обычный VPS** (самый надежный вариант)
+### "@51>20=8O
+- ::0C=B =0 Vercel (A2O70==K9 A GitHub)
+- 070 40==KE PostgreSQL (@5:><5=4C5BAO Supabase)
+- APP_KEY 4;O Laravel
 
-## Если все равно хотите деплоить на Vercel:
+## 2. 5=5@0F8O APP_KEY
 
-### Шаг 1: Подготовка базы данных
-
-Vercel НЕ поддерживает SQLite в продакшене. Нужна удаленная база данных:
-
-**Вариант 1: PlanetScale (бесплатный MySQL)**
-1. Зарегистрируйтесь на https://planetscale.com
-2. Создайте новую базу данных
-3. Получите credentials (host, username, password, database)
-
-**Вариант 2: Supabase (бесплатный PostgreSQL)**
-1. Зарегистрируйтесь на https://supabase.com
-2. Создайте новый проект
-3. Получите Database URL
-
-### Шаг 2: Подготовка хранилища файлов
-
-Vercel НЕ сохраняет загруженные файлы. Нужно использовать:
-
-**AWS S3 или совместимые:**
-1. Cloudflare R2 (бесплатно 10GB)
-2. DigitalOcean Spaces
-3. Backblaze B2
-
-Установите пакет:
+K?>;=8B5 ;>:0;L=>:
 ```bash
-composer require league/flysystem-aws-s3-v3 "^3.0"
+php artisan key:generate --show
 ```
 
-### Шаг 3: Настройка репозитория
+!:>?8@C9B5 ?>;CG5==K9 :;NG (D>@<0B: `base64:...`)
 
-1. Создайте репозиторий на GitHub:
-```bash
-git init
-git add .
-git commit -m "Initial commit for Vercel deployment"
-git branch -M main
-git remote add origin https://github.com/ваш-username/mi-tech.git
-git push -u origin main
-```
+## 3. !>740=85 ?@>5:B0 =0 Vercel
 
-### Шаг 4: Деплой на Vercel
+1. 5@5948B5 =0 [vercel.com](https://vercel.com)
+2. >948B5 G5@57 GitHub
+3. 06<8B5 "Add New Project"
+4. K15@8B5 @5?>78B>@89 `me_tech_store`
 
-1. Зайдите на https://vercel.com и войдите через GitHub
-2. Нажмите "Add New Project"
-3. Импортируйте ваш репозиторий `mi-tech`
-4. Настройте переменные окружения (Environment Variables):
+### 0AB@>9:8 ?@>5:B0:
+
+- **Framework Preset**: Other
+- **Build Command**: `npm run vercel-build`
+- **Output Directory**: (>AB02LB5 ?CABK<)
+- **Install Command**: `npm install`
+
+## 4. 0AB@>9:0 ?5@5<5==KE >:@C65=8O
+
+5@5948B5 2 Settings � Environment Variables 8 4>102LB5:
+
+### 1O70B5;L=K5 ?5@5<5==K5:
 
 ```env
-# App
-APP_NAME="Xiaomi Store"
+APP_NAME=Mi Tech Store
 APP_ENV=production
-APP_KEY=base64:ваш_app_key_из_.env
+APP_KEY=base64:(_.'__(_2
 APP_DEBUG=false
-APP_URL=https://your-project.vercel.app
-
-# Database - PlanetScale
-DB_CONNECTION=mysql
-DB_HOST=ваш-planetscale-host.psdb.cloud
-DB_PORT=3306
-DB_DATABASE=ваше-имя-базы
-DB_USERNAME=ваш-username
-DB_PASSWORD=ваш-password
-
-# Session & Cache (используйте database driver)
-SESSION_DRIVER=database
-CACHE_DRIVER=database
-
-# File Storage - S3/R2
-FILESYSTEM_DISK=s3
-AWS_ACCESS_KEY_ID=ваш-ключ
-AWS_SECRET_ACCESS_KEY=ваш-секретный-ключ
-AWS_DEFAULT_REGION=auto
-AWS_BUCKET=ваш-бакет
-AWS_URL=https://ваш-бакет.r2.cloudflarestorage.com
-AWS_ENDPOINT=https://ваш-account-id.r2.cloudflarestorage.com
-AWS_USE_PATH_STYLE_ENDPOINT=false
+APP_URL=https://20H-4><5=.vercel.app
+APP_TIMEZONE=Asia/Bishkek
+APP_LOCALE=ru
 ```
 
-5. Нажмите "Deploy"
+### 070 40==KE (PostgreSQL/Supabase):
 
-### Шаг 5: После первого деплоя
-
-После первого деплоя нужно запустить миграции:
-
-1. Установите Vercel CLI:
-```bash
-npm i -g vercel
+```env
+DB_CONNECTION=pgsql
+DB_HOST=db.wtevayfmmvrbtevxsbwh.supabase.co
+DB_PORT=5432
+DB_DATABASE=postgres
+DB_USERNAME=postgres
+DB_PASSWORD=(_ ,_SUPABASE
 ```
 
-2. Войдите:
-```bash
-vercel login
+### Supabase (5A;8 8A?>;L7C5BAO):
+
+```env
+SUPABASE_URL=https://wtevayfmmvrbtevxsbwh.supabase.co
+SUPABASE_KEY=20H_supabase_anon_key
+SUPABASE_SERVICE_KEY=20H_supabase_service_key
 ```
 
-3. Запустите миграции (это нужно сделать ВРУЧНУЮ через вашу базу данных):
-- Экспортируйте SQL из локальной SQLite
-- Импортируйте в PlanetScale/Supabase через их веб-интерфейс
+### >=D83C@0F8O 4;O Vercel:
 
-### Что НЕ БУДЕТ работать на Vercel:
+```env
+SESSION_DRIVER=cookie
+CACHE_STORE=array
+LOG_CHANNEL=stderr
+QUEUE_CONNECTION=sync
+SESSION_SECURE_COOKIE=true
+SESSION_SAME_SITE=lax
+```
 
-❌ Загрузка изображений товаров (нужен S3)
-❌ SQLite база данных
-❌ Сессии в файлах
-❌ Кеш в файлах
-❌ Очереди (queues)
-❌ Крон задачи (scheduled tasks)
-❌ Длительные запросы (timeout 10 секунд)
+## 5. 5?;>9
 
-## Рекомендация: Используйте Railway.app
+06<8B5 :=>?:C "Deploy" 8 4>648B5AL 7025@H5=8O A1>@:8.
 
-Railway.app намного лучше подходит для Laravel:
+## 6. 803=>AB8:0 ?@>1;5<
 
-1. Зайдите на https://railway.app
-2. Подключите GitHub репозиторий
-3. Railway автоматически:
-   - Создаст MySQL базу данных
-   - Настроит PHP окружение
-   - Запустит миграции
-   - Настроит хранилище
+### A;8 ?>;CG8;8 >H81:C 500:
 
-**Стоимость:** ~$5/месяц (включает БД + хостинг + storage)
+1. **@>25@LB5 ?>4@>1=CN >H81:C:**
+   - B:@>9B5 20H A09B 2 1@0C75@5
+   - K C2848B5 45B0;L=>5 >?8A0=85 >H81:8
+   - @>25@LB5 A>>1I5=85 >1 >H81:5
 
-## Нужна помощь?
+2. **803=>AB8G5A:0O AB@0=8F0:**
+   >102LB5 : URL ?0@0<5B@ `?_vercel_debug=true`
+   ```
+   https://20H-4><5=.vercel.app?_vercel_debug=true
+   ```
+   -B> ?>:065B:
+   - 5@A8N PHP
+   - #AB0=>2;5==K5 ?5@5<5==K5 >:@C65=8O
+   - 0;8G85 =5>1E>48<KE D09;>2
+   - @020 4>ABC?0 : 48@5:B>@8O<
 
-Если возникли проблемы:
-1. Проверьте логи в Vercel Dashboard → Deployments → Logs
-2. Убедитесь, что все Environment Variables настроены
-3. Проверьте подключение к базе данных
+3. **@>25@LB5 ;>38 Vercel:**
+   - 5@5948B5 2 Deployments
+   - K15@8B5 ?>A;54=89 45?;>9
+   - B:@>9B5 2:;04:C "Logs"
+   - 0948B5 AB@>:8 A "VERCEL ERROR"
 
-**Важно:** Для полноценного интернет-магазина рекомендуется использовать VPS или Railway, а не Vercel.
+### '0ABK5 ?@>1;5<K:
+
+#### L "No application encryption key has been specified"
+** 5H5=85:** APP_KEY =5 CAB0=>2;5= 8;8 =525@=K9 D>@<0B
+- !35=5@8@C9B5 =>2K9 :;NG: `php artisan key:generate --show`
+- #1548B5AL, GB> D>@<0B: `base64:xxxxx`
+
+#### L "SQLSTATE[08006] Connection refused"
+** 5H5=85:** @>1;5<K A 107>9 40==KE
+- @>25@LB5 DB_HOST, DB_USERNAME, DB_PASSWORD
+- #1548B5AL, GB> 1070 40==KE 4>ABC?=0 872=5
+- @>25@LB5, GB> DB_PORT=5432
+
+#### L "Class 'X' not found"
+** 5H5=85:** @>1;5<K A composer 7028A8<>ABO<8
+- @>25@LB5 Build Logs 2 Vercel
+- #1548B5AL, GB> `composer install` 2K?>;=8;AO CA?5H=>
+
+#### L "View not found" 8;8 ?@>1;5<K A ?CBO<8
+** 5H5=85:** @>1;5<K A :MH5< 8;8 ?CBO<8
+- G8AB8B5 :MH: Redeploy ?@>5:B0
+- @>25@LB5, GB> VIEW_COMPILED_PATH =0AB@>5=
+
+## 7. >A;5 CA?5H=>3> 45?;>O
+
+1. 1=>28B5 APP_URL =0 @50;L=K9 4><5= Vercel
+2. #AB0=>28B5 APP_DEBUG=false 4;O ?@>40:H5=0
+3. 0AB@>9B5 custom domain (>?F8>=0;L=>)
+4. @>25@LB5 @01>BC:
+   - ;02=0O AB@0=8F0
+   - 0B0;>3 B>20@>2
+   - 4<8=-?0=5;L `/admin/login`
+
+## 8. 2B><0B8G5A:85 >1=>2;5=8O
+
+>A;5 CA?5H=>3> 45?;>O:
+- 064K9 `git push` 2 25B:C `main` 02B><0B8G5A:8 7045?;>8BAO
+- Preview deployments A>740NBAO 4;O pull requests
+- Rollback 4>ABC?5= 2 ;N1>9 <><5=B G5@57 Vercel Dashboard
+
+## 9. 06=K5 >3@0=8G5=8O Vercel
+
+1. **$09;>20O A8AB5<0 read-only**
+   - 03@C65==K5 D09;K =5 A>E@0=ONBAO
+   - A?>;L7C9B5 Supabase Storage 8;8 S3 4;O D09;>2
+
+2. **57 D>=>2>3> 2K?>;=5=8O**
+   - Queues @01>B0NB B>;L:> sync
+   - Scheduled tasks =5 ?>445@6820NBAO
+
+3. **8<8BK 2@5<5=8 2K?>;=5=8O**
+   - 10 A5:C=4 4;O Hobby ?;0=
+   - 60 A5:C=4 4;O Pro ?;0=
+
+## 10. >445@6:0
+
+A;8 ?@>1;5<0 =5 @5H05BAO:
+1. B:@>9B5 `?_vercel_debug=true`
+2. @>25@LB5 Vercel Logs
+3. @>25@LB5 45B0;L=CN >H81:C =0 AB@0=8F5
+4. #1548B5AL, GB> 2A5 ?5@5<5==K5 >:@C65=8O CAB0=>2;5=K
