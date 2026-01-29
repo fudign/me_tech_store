@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Register custom Neon PostgreSQL connector
-        $this->app->singleton('db.connector.pgsql', function () {
+        $this->app->bind('db.connector.pgsql', function () {
             return new NeonPostgresConnector();
         });
     }
@@ -35,13 +35,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Fix for PostgreSQL boolean comparison when using emulated prepares
+        // When ATTR_EMULATE_PREPARES is true, PHP converts true to '1' in SQL
+        // But PostgreSQL boolean columns need explicit casting
+        if (config('database.default') === 'pgsql') {
+            \Illuminate\Database\Query\Builder::macro('whereBooleanColumn', function ($column, $value) {
+                $value = $value ? 'true' : 'false';
+                return $this->whereRaw("$column = $value::boolean");
+            });
+        }
         // Share categories with storefront views for navigation menu
         // Exclude admin views to avoid conflicts with pagination
         View::composer(['layouts.app', 'storefront.*'], function ($view) {
             try {
-                $categories = Category::where('is_active', true)
+                $categories = Category::active()
                     ->withCount(['products' => function ($query) {
-                        $query->where('is_active', true);
+                        $query->whereRaw('is_active = true');
                     }])
                     ->orderBy('name')
                     ->get();
@@ -59,9 +68,9 @@ class AppServiceProvider extends ServiceProvider
                         \Illuminate\Support\Facades\DB::statement('DEALLOCATE ALL');
 
                         // Retry query after reconnection
-                        $categories = Category::where('is_active', true)
+                        $categories = Category::active()
                             ->withCount(['products' => function ($query) {
-                                $query->where('is_active', true);
+                                $query->whereRaw('is_active = true');
                             }])
                             ->orderBy('name')
                             ->get();

@@ -96,12 +96,11 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'prefer'),
-            'endpoint' => env('DB_ENDPOINT'),
-            'options' => [
+            'endpoint' => env('DB_ENDPOINT'), // Used by NeonPostgresConnector
+            'options' => extension_loaded('pdo_pgsql') ? array_filter([
                 \PDO::ATTR_EMULATE_PREPARES => true,
                 \PDO::ATTR_PERSISTENT => false,
-            ],
-            'pool_mode' => 'transaction', // pgbouncer compatibility
+            ]) : [],
         ],
 
         'sqlsrv' => [

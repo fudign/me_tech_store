@@ -16,7 +16,7 @@ class WishlistController extends Controller
 
         // Load products from wishlist IDs
         $products = Product::whereIn('id', $wishlistIds)
-            ->where('is_active', true)
+            ->whereRaw('is_active = true')
             ->with('categories')
             ->get();
 
@@ -37,7 +37,7 @@ class WishlistController extends Controller
 
             // Check product is active
             $product = Product::where('id', $productId)
-                ->where('is_active', true)
+                ->whereRaw('is_active = true')
                 ->firstOrFail();
 
             $wishlist = session('wishlist', []);

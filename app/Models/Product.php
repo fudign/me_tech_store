@@ -61,4 +61,16 @@ class Product extends Model
             get: fn () => number_format($this->price / 100, 2) . ' сом',
         );
     }
+
+    // Scope for active products (fixes PostgreSQL boolean comparison issue)
+    public function scopeActive($query)
+    {
+        return $query->whereRaw('is_active = true');
+    }
+
+    // Scope for inactive products
+    public function scopeInactive($query)
+    {
+        return $query->whereRaw('is_active = false');
+    }
 }

@@ -17,7 +17,7 @@ class SearchController extends Controller
             'q' => 'nullable|string|max:200',
         ]);
 
-        $products = Product::where('is_active', true)
+        $products = Product::active()
             ->when($query, function ($queryBuilder) use ($query) {
                 // CRITICAL: Use prepared statements, never concatenate (Pitfall #1: SQL Injection)
                 $queryBuilder->where(function ($q) use ($query) {
@@ -48,7 +48,7 @@ class SearchController extends Controller
 
         $query = $request->input('q');
 
-        $products = Product::where('is_active', true)
+        $products = Product::active()
             ->where('name', 'LIKE', "%{$query}%")
             ->select('id', 'name', 'slug', 'price', 'main_image')
             ->limit(5)

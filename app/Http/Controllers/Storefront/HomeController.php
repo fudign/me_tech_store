@@ -12,7 +12,7 @@ class HomeController extends Controller
     {
         try {
             // Popular products (view_count or created_at for new products)
-            $popularProducts = Product::where('is_active', true)
+            $popularProducts = Product::active()
                 ->orderBy('view_count', 'desc')
                 ->limit(8)
                 ->get();
@@ -34,7 +34,7 @@ class HomeController extends Controller
                 try {
                     \Illuminate\Support\Facades\DB::reconnect();
 
-                    $popularProducts = Product::where('is_active', true)
+                    $popularProducts = Product::active()
                         ->orderBy('view_count', 'desc')
                         ->limit(8)
                         ->get();

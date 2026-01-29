@@ -65,7 +65,7 @@ class ProductController extends Controller
      */
     protected function getFilteredProducts(Request $request)
     {
-        $query = Product::where('is_active', true)
+        $query = Product::active()
             ->with('categories'); // Prevent N+1 queries
 
         // Price range filter (prices stored in cents)

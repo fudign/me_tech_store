@@ -34,7 +34,7 @@ class SettingsController extends Controller
         ];
 
         // Get all products for dropdown
-        $products = \App\Models\Product::where('is_active', true)
+        $products = \App\Models\Product::active()
             ->orderBy('name')
             ->get();
 

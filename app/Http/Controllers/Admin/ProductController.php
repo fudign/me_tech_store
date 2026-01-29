@@ -30,7 +30,7 @@ class ProductController extends Controller
     public function create()
     {
         try {
-            $categories = Category::where('is_active', true)->get();
+            $categories = Category::active()->get();
         } catch (\Exception $e) {
             // If cached plan error, try to reconnect and retry
             if (str_contains($e->getMessage(), 'cached plan')) {
@@ -40,7 +40,7 @@ class ProductController extends Controller
                 } catch (\Exception $e2) {
                     // Ignore
                 }
-                $categories = Category::where('is_active', true)->get();
+                $categories = Category::active()->get();
             } else {
                 throw $e;
             }
@@ -127,7 +127,7 @@ class ProductController extends Controller
         $product->load('categories', 'attributes');
 
         try {
-            $categories = Category::where('is_active', true)->get();
+            $categories = Category::active()->get();
         } catch (\Exception $e) {
             // If cached plan error, try to reconnect and retry
             if (str_contains($e->getMessage(), 'cached plan')) {
@@ -137,7 +137,7 @@ class ProductController extends Controller
                 } catch (\Exception $e2) {
                     // Ignore
                 }
-                $categories = Category::where('is_active', true)->get();
+                $categories = Category::active()->get();
             } else {
                 throw $e;
             }

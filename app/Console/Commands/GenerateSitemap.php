@@ -43,7 +43,7 @@ class GenerateSitemap extends Command
         );
 
         // Add categories
-        $categories = Category::where('is_active', true)->get();
+        $categories = Category::active()->get();
         foreach ($categories as $category) {
             $sitemap->add(
                 Url::create(route('category.show', $category, false))
@@ -55,7 +55,7 @@ class GenerateSitemap extends Command
         $this->info("Added {$categories->count()} categories");
 
         // Add products
-        $products = Product::where('is_active', true)->get();
+        $products = Product::active()->get();
         foreach ($products as $product) {
             $sitemap->add(
                 Url::create(route('product.show', $product, false))

@@ -26,7 +26,7 @@ class DashboardController extends Controller
                 ->sum('total_amount'),
             'total_orders' => Order::count(),
             'total_customers' => User::whereNotNull('email_verified_at')->count(),
-            'total_products' => Product::where('is_active', true)->count(),
+            'total_products' => Product::active()->count(),
 
             // Monthly stats
             'monthly_revenue' => Order::whereIn('status', [Order::STATUS_COMPLETED, Order::STATUS_DELIVERING])
@@ -85,7 +85,7 @@ class DashboardController extends Controller
             ->get();
 
         // Low stock products (less than 10)
-        $lowStockProducts = Product::where('is_active', true)
+        $lowStockProducts = Product::active()
             ->where('stock', '<', 10)
             ->where('stock', '>', 0)
             ->orderBy('stock')

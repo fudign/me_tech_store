@@ -34,4 +34,10 @@ class Category extends Model
     {
         return $this->belongsToMany(Product::class);
     }
+
+    // Scope for active categories (fixes PostgreSQL boolean comparison issue)
+    public function scopeActive($query)
+    {
+        return $query->whereRaw('is_active = true');
+    }
 }
