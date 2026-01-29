@@ -21,9 +21,9 @@ class ImageUploadService
         // Check if running on Vercel (read-only filesystem)
         $isVercel = $this->isVercel();
 
-        if ($isVercel && $this->hasCloudinaryConfig()) {
-            // Use Cloudinary for production
-            return $this->uploadToCloudinary($file, $folder);
+        if ($isVercel && $this->hasImgbbConfig()) {
+            // Use imgbb for production
+            return $this->uploadToImgbb($file, $folder);
         } else {
             // Use local storage for development
             return $this->uploadToLocal($file, $folder);
@@ -60,50 +60,32 @@ class ImageUploadService
     }
 
     /**
-     * Upload to Cloudinary
+     * Upload to imgbb
      *
      * @param UploadedFile $file
      * @param string $folder
      * @return string URL of uploaded file
      */
-    protected function uploadToCloudinary(UploadedFile $file, string $folder): string
+    protected function uploadToImgbb(UploadedFile $file, string $folder): string
     {
-        $cloudName = config('services.cloudinary.cloud_name');
-        $apiKey = config('services.cloudinary.api_key');
-        $apiSecret = config('services.cloudinary.api_secret');
+        $apiKey = config('services.imgbb.api_key');
 
-        // Generate unique filename
-        $filename = Str::random(40);
+        // Convert image to base64
+        $imageBase64 = base64_encode($file->get());
 
-        // Create signature for upload
-        $timestamp = time();
-        $paramsToSign = [
-            'folder' => $folder,
-            'public_id' => $filename,
-            'timestamp' => $timestamp,
-        ];
-
-        ksort($paramsToSign);
-        $signatureString = http_build_query($paramsToSign, '', '&', PHP_QUERY_RFC3986);
-        $signature = sha1($signatureString . $apiSecret);
-
-        // Upload to Cloudinary
-        $response = Http::asMultipart()
-            ->attach('file', $file->get(), $file->getClientOriginalName())
-            ->post("https://api.cloudinary.com/v1_1/{$cloudName}/image/upload", [
-                'api_key' => $apiKey,
-                'timestamp' => $timestamp,
-                'signature' => $signature,
-                'folder' => $folder,
-                'public_id' => $filename,
-            ]);
+        // Upload to imgbb
+        $response = Http::asForm()->post('https://api.imgbb.com/1/upload', [
+            'key' => $apiKey,
+            'image' => $imageBase64,
+            'name' => $folder . '_' . Str::random(20),
+        ]);
 
         if ($response->successful()) {
             $data = $response->json();
-            return $data['secure_url'] ?? $data['url'];
+            return $data['data']['url'];
         }
 
-        throw new \RuntimeException('Failed to upload to Cloudinary: ' . $response->body());
+        throw new \RuntimeException('Failed to upload to imgbb: ' . $response->body());
     }
 
     /**
@@ -117,15 +99,13 @@ class ImageUploadService
     }
 
     /**
-     * Check if Cloudinary config is available
+     * Check if imgbb config is available
      *
      * @return bool
      */
-    protected function hasCloudinaryConfig(): bool
+    protected function hasImgbbConfig(): bool
     {
-        return !empty(config('services.cloudinary.cloud_name'))
-            && !empty(config('services.cloudinary.api_key'))
-            && !empty(config('services.cloudinary.api_secret'));
+        return !empty(config('services.imgbb.api_key'));
     }
 
     /**
