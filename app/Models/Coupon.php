@@ -30,7 +30,7 @@ class Coupon extends Model
         'max_discount_amount' => 'integer',
         'usage_limit' => 'integer',
         'used_count' => 'integer',
-        'is_active' => 'boolean',
+        'is_active' => 'integer',
         'starts_at' => 'datetime',
         'expires_at' => 'datetime',
     ];
@@ -122,7 +122,7 @@ class Coupon extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('is_active', true)
+        return $query->where('is_active', 1)
             ->where(function ($q) {
                 $q->whereNull('starts_at')
                   ->orWhere('starts_at', '<=', now());

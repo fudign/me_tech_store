@@ -24,12 +24,12 @@ class CartController extends Controller
      */
     public function add(Request $request)
     {
-        try {
-            $request->validate([
-                'product_id' => 'required|exists:products,id',
-                'quantity' => 'nullable|integer|min:1',
-            ]);
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'nullable|integer|min:1',
+        ]);
 
+        try {
             $product = Product::findOrFail($request->product_id);
 
             Cart::add([
@@ -61,11 +61,11 @@ class CartController extends Controller
      */
     public function update(Request $request, $itemId)
     {
-        try {
-            $request->validate([
-                'quantity' => 'required|integer|min:1',
-            ]);
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
 
+        try {
             Cart::update($itemId, [
                 'quantity' => [
                     'relative' => false,

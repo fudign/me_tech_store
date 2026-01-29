@@ -40,8 +40,10 @@ class AppServiceProvider extends ServiceProvider
         // But PostgreSQL boolean columns need explicit casting
         if (config('database.default') === 'pgsql') {
             \Illuminate\Database\Query\Builder::macro('whereBooleanColumn', function ($column, $value) {
+                // Sanitize column name to prevent SQL injection
+                $column = preg_replace('/[^a-zA-Z0-9_.]/', '', $column);
                 $value = $value ? 'true' : 'false';
-                return $this->whereRaw("$column = $value::boolean");
+                return $this->whereRaw("\"$column\" = $value::boolean");
             });
         }
         // Share categories with storefront views for navigation menu
@@ -50,7 +52,8 @@ class AppServiceProvider extends ServiceProvider
             try {
                 $categories = Category::active()
                     ->withCount(['products' => function ($query) {
-                        $query->whereRaw('is_active = true');
+                        // Use integer comparison for PostgreSQL compatibility
+                        $query->where('is_active', 1);
                     }])
                     ->orderBy('name')
                     ->get();
@@ -70,7 +73,8 @@ class AppServiceProvider extends ServiceProvider
                         // Retry query after reconnection
                         $categories = Category::active()
                             ->withCount(['products' => function ($query) {
-                                $query->whereRaw('is_active = true');
+                                // Use integer comparison for PostgreSQL compatibility
+                                $query->where('is_active', 1);
                             }])
                             ->orderBy('name')
                             ->get();
@@ -89,8 +93,14 @@ class AppServiceProvider extends ServiceProvider
                 // If database is not available (e.g., Vercel demo mode), use empty collection
                 \Illuminate\Support\Facades\Log::error('Unexpected error loading categories', [
                     'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
                 ]);
                 $categories = collect([]);
+
+                // In development, flash error to help debugging
+                if (config('app.debug')) {
+                    session()->flash('category_load_error', 'Не удалось загрузить категории: ' . $e->getMessage());
+                }
             }
 
             $view->with('categories', $categories);

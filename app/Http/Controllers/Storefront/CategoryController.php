@@ -26,7 +26,7 @@ class CategoryController extends Controller
         ]);
 
         $query = $category->products()
-            ->whereRaw('is_active = true')
+            ->active()
             ->with('categories');
 
         // Price range filter (prices stored in cents)

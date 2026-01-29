@@ -16,7 +16,7 @@ class WishlistController extends Controller
 
         // Load products from wishlist IDs
         $products = Product::whereIn('id', $wishlistIds)
-            ->whereRaw('is_active = true')
+            ->active()
             ->with('categories')
             ->get();
 
@@ -28,16 +28,16 @@ class WishlistController extends Controller
      */
     public function toggle(Request $request)
     {
-        try {
-            $request->validate([
-                'product_id' => 'required|exists:products,id',
-            ]);
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+        ]);
 
+        try {
             $productId = $request->product_id;
 
             // Check product is active
             $product = Product::where('id', $productId)
-                ->whereRaw('is_active = true')
+                ->active()
                 ->firstOrFail();
 
             $wishlist = session('wishlist', []);
@@ -61,6 +61,11 @@ class WishlistController extends Controller
                 'count' => count($wishlist),
                 'message' => $message
             ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Товар не найден или неактивен'
+            ], 404);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

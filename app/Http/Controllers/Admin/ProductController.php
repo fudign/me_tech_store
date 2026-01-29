@@ -85,7 +85,7 @@ class ProductController extends Controller
             'old_price' => $data['old_price'] ?? null,
             'slug' => $data['slug'] ?? null,
             'availability_status' => $data['availability_status'],
-            'is_active' => $data['is_active'] ?? false,
+            'is_active' => filter_var($data['is_active'] ?? false, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false,
             'meta_title' => $data['meta_title'] ?? null,
             'meta_description' => $data['meta_description'] ?? null,
             'images' => $imagePaths,
@@ -192,7 +192,7 @@ class ProductController extends Controller
             'old_price' => $data['old_price'] ?? null,
             'slug' => $data['slug'] ?? null,
             'availability_status' => $data['availability_status'],
-            'is_active' => $data['is_active'] ?? false,
+            'is_active' => (bool)($data['is_active'] ?? false), // Cast to boolean for PostgreSQL
             'meta_title' => $data['meta_title'] ?? null,
             'meta_description' => $data['meta_description'] ?? null,
             'images' => $imagePaths,

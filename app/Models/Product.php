@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +12,7 @@ use Spatie\Sluggable\SlugOptions;
 
 class Product extends Model
 {
-    use HasSlug;
+    use HasFactory, HasSlug;
 
     protected $fillable = [
         'name',
@@ -34,7 +35,7 @@ class Product extends Model
         'images' => 'array',
         'price' => 'integer',
         'old_price' => 'integer',
-        'is_active' => 'boolean',
+        'is_active' => 'integer', // Changed to integer for PostgreSQL compatibility
     ];
 
     public function getSlugOptions(): SlugOptions
@@ -62,15 +63,27 @@ class Product extends Model
         );
     }
 
-    // Scope for active products (fixes PostgreSQL boolean comparison issue)
+    /**
+     * Scope a query to only include active products.
+     *
+     * Fixes PostgreSQL boolean comparison issue when using emulated prepares.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeActive($query)
     {
-        return $query->whereRaw('is_active = true');
+        return $query->where('is_active', 1);
     }
 
-    // Scope for inactive products
+    /**
+     * Scope a query to only include inactive products.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeInactive($query)
     {
-        return $query->whereRaw('is_active = false');
+        return $query->where('is_active', 0);
     }
 }

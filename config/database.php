@@ -98,7 +98,7 @@ return [
             'sslmode' => env('DB_SSLMODE', 'prefer'),
             'endpoint' => env('DB_ENDPOINT'), // Used by NeonPostgresConnector
             'options' => extension_loaded('pdo_pgsql') ? array_filter([
-                \PDO::ATTR_EMULATE_PREPARES => true,
+                \PDO::ATTR_EMULATE_PREPARES => false, // Use native prepares for proper boolean handling
                 \PDO::ATTR_PERSISTENT => false,
             ]) : [],
         ],

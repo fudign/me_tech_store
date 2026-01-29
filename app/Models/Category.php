@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
 class Category extends Model
 {
-    use HasSlug;
+    use HasFactory, HasSlug;
 
     protected $fillable = [
         'name',
@@ -20,7 +22,7 @@ class Category extends Model
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'is_active' => 'integer', // Changed to integer for PostgreSQL compatibility
     ];
 
     public function getSlugOptions(): SlugOptions
@@ -35,9 +37,16 @@ class Category extends Model
         return $this->belongsToMany(Product::class);
     }
 
-    // Scope for active categories (fixes PostgreSQL boolean comparison issue)
+    /**
+     * Scope a query to only include active categories.
+     *
+     * Fixes PostgreSQL boolean comparison issue when using emulated prepares.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeActive($query)
     {
-        return $query->whereRaw('is_active = true');
+        return $query->where('is_active', 1);
     }
 }

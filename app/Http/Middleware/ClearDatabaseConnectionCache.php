@@ -21,24 +21,8 @@ class ClearDatabaseConnectionCache
             return $next($request);
         }
 
-        // For PostgreSQL connections (especially with pooler)
-        // Disabled: DISCARD ALL causes connection issues with Neon pooler
-        // The NeonPostgresConnector handles this internally on connection creation
-        /* if (config('database.default') === 'pgsql') {
-            try {
-                // Force reconnect to get fresh connection from pool
-                DB::purge('pgsql');
-                DB::reconnect('pgsql');
-
-                // Clear any cached prepared statements
-                DB::statement('DISCARD ALL');
-            } catch (\Exception $e) {
-                // Log error but continue - we'll handle at query level
-                \Illuminate\Support\Facades\Log::debug('Failed to clear DB cache in middleware', [
-                    'error' => $e->getMessage()
-                ]);
-            }
-        } */
+        // Note: Connection cache clearing is disabled for Neon pooler compatibility
+        // The NeonPostgresConnector handles statement clearing on connection creation
 
         return $next($request);
     }
