@@ -21,9 +21,9 @@ class SearchController extends Controller
             ->when($query, function ($queryBuilder) use ($query) {
                 // CRITICAL: Use prepared statements, never concatenate (Pitfall #1: SQL Injection)
                 $queryBuilder->where(function ($q) use ($query) {
-                    $q->where('name', 'LIKE', '%' . $query . '%')
-                      ->orWhere('description', 'LIKE', '%' . $query . '%')
-                      ->orWhere('sku', 'LIKE', '%' . $query . '%');
+                    $q->where('name', 'ILIKE', '%' . $query . '%')
+                      ->orWhere('description', 'ILIKE', '%' . $query . '%')
+                      ->orWhere('sku', 'ILIKE', '%' . $query . '%');
                 });
             })
             ->with('categories')
@@ -49,7 +49,7 @@ class SearchController extends Controller
         $query = $request->input('q');
 
         $products = Product::active()
-            ->where('name', 'LIKE', "%{$query}%")
+            ->where('name', 'ILIKE', "%{$query}%")
             ->select('id', 'name', 'slug', 'price', 'main_image')
             ->limit(5)
             ->get();
