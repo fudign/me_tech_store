@@ -19,9 +19,9 @@ class UpdateCategoryRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        // Convert checkbox value to boolean
+        // Convert checkbox value to integer for PostgreSQL compatibility
         $this->merge([
-            'is_active' => $this->has('is_active') ? true : false,
+            'is_active' => $this->has('is_active') ? 1 : 0,
         ]);
     }
 
@@ -36,7 +36,7 @@ class UpdateCategoryRequest extends FormRequest
             'name' => 'required|string|max:200',
             'description' => 'nullable|string',
             'slug' => 'nullable|string|max:200|unique:categories,slug,' . $categoryId,
-            'is_active' => 'nullable|boolean',
+            'is_active' => 'nullable|integer|in:0,1',
             'meta_title' => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',
         ];

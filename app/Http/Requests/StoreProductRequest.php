@@ -19,9 +19,9 @@ class StoreProductRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        // Convert checkbox value to boolean
+        // Convert checkbox value to integer for PostgreSQL compatibility
         $this->merge([
-            'is_active' => $this->has('is_active') ? true : false,
+            'is_active' => $this->has('is_active') ? 1 : 0,
         ]);
 
         // Convert price from KGS to cents if needed (frontend sends in KGS)
@@ -59,7 +59,7 @@ class StoreProductRequest extends FormRequest
             'attributes' => ['nullable', 'array'],
             'attributes.*.key' => ['required_with:attributes', 'string', 'max:100'],
             'attributes.*.value' => ['required_with:attributes', 'string', 'max:255'],
-            'is_active' => ['nullable', 'boolean'],
+            'is_active' => ['nullable', 'integer', 'in:0,1'],
             'meta_title' => ['nullable', 'string', 'max:200'],
             'meta_description' => ['nullable', 'string', 'max:300'],
         ];
