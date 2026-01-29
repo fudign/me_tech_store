@@ -71,8 +71,13 @@ class CheckoutController extends Controller
 
         } catch (\Exception $e) {
             // Transaction auto-rolled back
+            \Log::error('Checkout error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
+
             return back()
-                ->withErrors(['checkout' => 'Ошибка при оформлении заказа. Попробуйте снова.'])
+                ->withErrors(['checkout' => 'Ошибка при оформлении заказа: ' . $e->getMessage()])
                 ->withInput();
         }
     }

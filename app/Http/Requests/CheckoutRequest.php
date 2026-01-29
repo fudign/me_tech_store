@@ -21,7 +21,7 @@ class CheckoutRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'min:2', 'max:255'],
-            'phone' => ['required', 'phone:KG'],
+            'phone' => ['required', 'string', 'regex:/^\+996\s?\d{3}\s?\d{3}\s?\d{3}$/'],
             'address' => ['required', 'string', 'min:10', 'max:500'],
             'payment_method' => ['required', 'in:cash,online,installment'],
         ];
@@ -36,7 +36,7 @@ class CheckoutRequest extends FormRequest
             'name.required' => 'Укажите ваше имя',
             'name.min' => 'Имя должно содержать минимум 2 символа',
             'phone.required' => 'Укажите номер телефона',
-            'phone.phone' => 'Неверный формат телефона. Используйте +996 XXX XXX XXX',
+            'phone.regex' => 'Неверный формат телефона. Используйте +996 XXX XXX XXX',
             'address.required' => 'Укажите адрес доставки',
             'address.min' => 'Адрес должен содержать минимум 10 символов',
             'payment_method.required' => 'Выберите способ оплаты',
