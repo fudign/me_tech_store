@@ -7,6 +7,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\ImageUploadService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 
@@ -52,7 +53,7 @@ class ProductController extends Controller
     /**
      * Store a newly created product
      */
-    public function store(StoreProductRequest $request)
+    public function store(StoreProductRequest $request, ImageUploadService $imageUploadService)
     {
         $data = $request->validated();
 
@@ -62,7 +63,7 @@ class ProductController extends Controller
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
-                $path = Storage::disk('public')->put('products', $image);
+                $path = $imageUploadService->upload($image, 'products');
                 $imagePaths[] = $path;
 
                 // Set main image
@@ -149,7 +150,7 @@ class ProductController extends Controller
     /**
      * Update the specified product
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product, ImageUploadService $imageUploadService)
     {
         $data = $request->validated();
 
@@ -161,15 +162,13 @@ class ProductController extends Controller
         if ($request->hasFile('images')) {
             // Delete old images
             if (!empty($product->images)) {
-                foreach ($product->images as $oldImage) {
-                    Storage::disk('public')->delete($oldImage);
-                }
+                $imageUploadService->deleteMultiple($product->images);
             }
 
             // Upload new images
             $imagePaths = [];
             foreach ($request->file('images') as $index => $image) {
-                $path = Storage::disk('public')->put('products', $image);
+                $path = $imageUploadService->upload($image, 'products');
                 $imagePaths[] = $path;
 
                 // Set main image
@@ -230,13 +229,11 @@ class ProductController extends Controller
     /**
      * Remove the specified product
      */
-    public function destroy(Product $product)
+    public function destroy(Product $product, ImageUploadService $imageUploadService)
     {
         // Delete product images from storage
         if (!empty($product->images)) {
-            foreach ($product->images as $image) {
-                Storage::disk('public')->delete($image);
-            }
+            $imageUploadService->deleteMultiple($product->images);
         }
 
         // Delete product (cascading will handle attributes)
