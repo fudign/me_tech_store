@@ -20,6 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(\App\Http\Middleware\ClearDatabaseConnectionCache::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // Disable error view paths registration in serverless to prevent View facade usage before boot
+        $exceptions->dontRegisterErrorViewPaths();
+
         // Handle database connection errors (ERR-02)
         $exceptions->render(function (\PDOException $e, $request) {
             // Database connection errors (SQLSTATE[HY000] [2002])
