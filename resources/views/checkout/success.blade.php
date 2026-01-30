@@ -2,6 +2,42 @@
 
 @section('title', 'Заказ оформлен | Mi Tech')
 
+@push('scripts')
+<script>
+    // Show order success notification on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Option 1: Show Toast Notification
+        window.dispatchEvent(new CustomEvent('order-success', {
+            detail: {
+                message: 'Ваш заказ успешно принят в обработку',
+                title: 'Заказ оформлен!',
+                details: {
+                    orderNumber: '{{ $order->order_number }}',
+                    total: '{{ $order->formatted_total }}'
+                },
+                actionText: 'Посмотреть детали',
+                actionUrl: '#order-details',
+                duration: 7000
+            }
+        }));
+
+        // Option 2: Show Modal (uncomment if you prefer modal over toast)
+        // setTimeout(() => {
+        //     window.dispatchEvent(new CustomEvent('order-modal', {
+        //         detail: {
+        //             orderNumber: '{{ $order->order_number }}',
+        //             total: '{{ $order->formatted_total }}',
+        //             customerName: '{{ $order->customer_name }}',
+        //             customerPhone: '{{ $order->customer_phone }}',
+        //             customerAddress: '{{ $order->customer_address }}',
+        //             orderUrl: '#order-details'
+        //         }
+        //     }));
+        // }, 500);
+    });
+</script>
+@endpush
+
 @section('content')
 <div class="max-w-3xl mx-auto px-6 py-12">
     <!-- Success Icon and Message -->

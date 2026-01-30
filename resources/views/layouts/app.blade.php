@@ -217,13 +217,13 @@
         </form>
 
         <!-- Categories Menu -->
-        <nav class="hidden md:block border-t border-gray-50 bg-white">
-            <ul class="max-w-7xl mx-auto px-6 flex items-center gap-8 text-sm font-medium text-gray-500 overflow-x-auto no-scrollbar">
-                <li><a href="{{ route('home') }}" class="block py-3 hover:text-brand-500 border-b-2 border-transparent hover:border-brand-500 transition-all whitespace-nowrap {{ Request::is('/') ? 'text-brand-500' : '' }}">Главная</a></li>
-                <li><a href="{{ route('products.index') }}" class="block py-3 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-200 transition-all whitespace-nowrap">Все товары</a></li>
+        <nav class="hidden md:block border-t border-blue-800 bg-blue-900">
+            <ul class="max-w-7xl mx-auto px-6 flex items-center gap-8 text-sm font-medium text-gray-200 overflow-x-auto no-scrollbar">
+                <li><a href="{{ route('home') }}" class="block py-3 hover:text-white border-b-2 border-transparent hover:border-brand-500 transition-all whitespace-nowrap {{ Request::is('/') ? 'text-brand-500' : '' }}">Главная</a></li>
+                <li><a href="{{ route('products.index') }}" class="block py-3 hover:text-white border-b-2 border-transparent hover:border-blue-400 transition-all whitespace-nowrap">Все товары</a></li>
                 @isset($categories)
                     @foreach($categories as $category)
-                        <li><a href="{{ route('category.show', $category) }}" class="block py-3 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-200 transition-all whitespace-nowrap">{{ $category->name }}</a></li>
+                        <li><a href="{{ route('category.show', $category) }}" class="block py-3 hover:text-white border-b-2 border-transparent hover:border-blue-400 transition-all whitespace-nowrap">{{ $category->name }}</a></li>
                     @endforeach
                 @endisset
             </ul>
@@ -424,6 +424,9 @@
 
     <!-- Toast Notifications -->
     <x-toast />
+
+    <!-- Order Success Modal -->
+    <x-order-success-modal />
 
     <!-- WhatsApp Floating Button -->
     <x-whatsapp-button />
